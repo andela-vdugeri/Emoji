@@ -21,6 +21,8 @@ class Connection extends EnvReader
     private $connection;
     public function getConnection()
     {
+		//initialize database configurations
+		$this->initConfigs();
         //try to get a pdo connection, fail if an error occurs
 		$connection = null;
         try {
