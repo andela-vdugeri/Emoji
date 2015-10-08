@@ -160,4 +160,39 @@ class UserManager extends Connection implements Queryable
         }
         return json_encode($object);
     }
+
+	public function updateToken($expiryDate,$token, $username)
+	{
+		//construct a sql
+		$sql = "UPDATE users SET token_expire = ?, token = ? WHERE username = ?";
+
+		//create a connection
+		$connection = $this->getConnection();
+
+		//prepare a sql statement
+		$statement = $connection->prepare($sql);
+
+		//bind statement parameters
+		$statement->bindParam(1, $expiryDate);
+		$statement->bindParam(2, $token);
+		$statement->bindParam(3, $username);
+
+		//execute the statement
+		$statement->execute();
+
+		//return true if a row is affected
+		if($statement->rowCount() > 0) {
+			return  $this->toJson([
+			    'statusCode' =>  200,
+				'message' 	 =>  'token expiry set'
+			]);
+		}
+
+		return $this->toJson([
+		  	'statusCode' => '304',
+			'message'	 => 'Unable to set token expiry date'
+		]);
+
+	}
+
 }

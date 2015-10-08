@@ -11,9 +11,35 @@ require_once('vendor/autoload.php');
 use Slim\Slim;
 use Verem\Emoji\Api\Emoji;
 use Verem\Emoji\Api\Authenticate;
+use Verem\Emoji\Api\DAO\UserManager;
 use Verem\Emoji\Api\DAO\EmojiManager;
+use Verem\Emoji\Api\Exceptions\RecordNotFoundException;
 
 $app = new Slim();
+
+//route middleware
+$authenticator = function () use ($app) {
+    //determine if the user has authorization.
+
+    $authorization = $app->request->headers->get('Authorization');
+
+    if (! is_null($authorization)) {
+        //check token expiry
+        $manager = new UserManager();
+        try {
+            $user = $manager->where('token', '=', $authorization);
+            if ($user['token_expire'] < date('Y-m-d H:i:s')) {
+                $app->stop();
+            }
+        } catch (RecordNotFoundException $e) {
+            $app->response->status(401);
+			$app->stop();
+        }
+    } else {
+        $app->response()->status(401);
+        $app->stop();
+    }
+};
 
 
 $app->get('/', function () {
@@ -29,14 +55,34 @@ $app->get('/login', function () {
 });
 
 $app->post('/auth/login', function () use ($app) {
-	$username = $app->request->params('username');
-	$password = $app->request->params('password');
+
+    $username = $app->request->params('username');
+    $password = $app->request->params('password');
+
     $auth = new Authenticate($username, $password);
+
     $token = $auth->login();
-    echo $token;
+
+    $data = json_decode($token, true);
+
+    $result = null;
+
+    if (array_key_exists('token', $data)) {
+
+        //update the user table
+        $manager = new UserManager();
+
+        $result = $manager->updateToken(
+          $data['expiry'], $data['token'], $username);
+    }
+
+    if (json_decode($result, true)['statusCode'] == 200) {
+        $response = $app->response();
+        $response['authorization'] = $data['token'];
+    }
 });
 
-$app->get('/emojis', function () {
+$app->get('/emojis', $authenticator, function () {
     $manager = new EmojiManager();
     $emojis = $manager->all();
     echo $manager->toJson($emojis);
@@ -75,7 +121,7 @@ $app->post('/emojis', function () use ($app) {
 /**
  * Update an emoji matching the specified id
  */
-$app->put('/emojis/:id', function($id){
+$app->put('/emojis/:id', function ($id) {
 
 });
 
@@ -83,25 +129,25 @@ $app->put('/emojis/:id', function($id){
 /**
  * delete an emoji by the specified id
  */
-$app->delete('/emojis/:id', function($id){
+$app->delete('/emojis/:id', function ($id) {
 
-	$manager = new EmojiManager();
-	try{
-		$result = $manager->delete($id);
-		if($result === true) {
-			echo json_encode([
-			  	'statusCode ' 	=> 	200,
-				'message' 		=> 	'Record deleted'
-			]);
-		} else {
-			echo json_encode([
-			  	'statusCode' 	=>	304,
-				'message'		=> 	'Record not found'
-			]);
-		}
-	} catch(PDOException $e) {
-		echo json_encode(['message' => $e->getMessage()]);
-	}
+    $manager = new EmojiManager();
+    try {
+        $result = $manager->delete($id);
+        if ($result === true) {
+            echo json_encode([
+                'statusCode '    =>    200,
+                'message'        =>    'Record deleted'
+            ]);
+        } else {
+            echo json_encode([
+                'statusCode'    =>    304,
+                'message'        =>    'Record not found'
+            ]);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['message' => $e->getMessage()]);
+    }
 });
 
 

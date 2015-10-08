@@ -55,6 +55,10 @@ class Authenticate
     public function getToken($username, $password)
     {
         $token = bin2hex(openssl_random_pseudo_bytes(16));
-        return json_encode([$username, $token]);
+		$tokenExpire = date('Y-m-d H:i:s', strtotime('+ 1 hour'));
+        return json_encode([
+		  'expiry'=>$tokenExpire,
+		  'token' => $token
+		]);
     }
 }
