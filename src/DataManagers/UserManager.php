@@ -11,145 +11,152 @@ namespace Verem\Emoji\Api\DAO;
 use PDO;
 use PDOException;
 use Verem\Emoji\Api\User;
+use InvalidArgumentException;
 use Verem\Emoji\Api\Utils\Queryable;
 use Verem\Emoji\Api\Utils\Connection;
 use Verem\Emoji\Api\Exceptions\RecordNotFoundException;
 
 class UserManager extends Connection implements Queryable
 {
-	public function find($id)
-	{
-		//create sql statement
-		$sql = "SELECT * FROM users WHERE id = ?";
+    public function find($id)
+    {
+        //create sql statement
+        $sql = "SELECT * FROM users WHERE id = ?";
 
-		//get a connection instance
-		$connection = $this->getConnection();
+        //get a connection instance
+        $connection = $this->getConnection();
 
-		//prepare a statement
-		$statement = $connection->prepare($sql);
+        //prepare a statement
+        $statement = $connection->prepare($sql);
 
-		//bind params
-		$statement->bindParam(1, $id);
+        //bind params
+        $statement->bindParam(1, $id);
 
-		//get the result
-		$result = $statement->execute();
+        //get the result
+        $result = $statement->execute();
 
-		//if affected rows is more than one, return the result;
-		if($statement->rowCount() > 0) {
-			return $result;
-		}
+        //if result is not empty, return it
+        if (! empty($result)) {
+            return $result;
+        }
 
-		throw new RecordNotFoundException("The user does not exist in the database");
-	}
+        throw new RecordNotFoundException("The user does not exist in the database");
+    }
 
-	public function where($column, $operand, $value)
-	{
-		//construct a sql query
-		$sql = "SELECT * FROM users WHERE $column $operand ?";
+    public function where($column, $operand, $value)
+    {
+        //construct a sql query
+        $sql = "SELECT * FROM users WHERE $column $operand ?";
 
-		//create a connection to the database
-		$connection = $this->getConnection();
+        //create a connection to the database
+        $connection = $this->getConnection();
 
-		//prepare a statement
-		$statement = $connection->prepare($sql);
+        //prepare a statement
+        $statement = $connection->prepare($sql);
 
-		//bind params
+        //bind params
 
-		$statement->bindParam(1, $value);
+        $statement->bindParam(1, $value);
 
-		//execute query;
+        //execute query;
 
-		$statement->execute();
+        $statement->execute();
 
-		//if affected rows is more than one, return the result;
-		if($statement->rowCount() > 0) {
-			return true;
-		}
+        //if affected rows is more than one, return the result;
+        if ($statement->rowCount() > 0) {
+            return true;
+        }
 
-		throw new RecordNotFoundException("The record does not exist");
+        throw new RecordNotFoundException("The record does not exist");
+    }
 
-	}
+    public function all()
+    {
+        //construct a sql query
+        $sql = "SELECT * FROM users";
 
-	public function all()
-	{
-		//construct a sql query
-		$sql = "SELECT * FROM users";
+        //get a connection instance
+        $connection = $this->getConnection();
 
-		//get a connection instance
-		$connection = $this->getConnection();
+        //make a database query
+        $statement = $connection->query($sql);
 
-		//make a database query
-		$statement = $connection->query($sql);
+        //fetch result
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-		//fetch result
-		$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        //if result is not empty return it, else throw an exception
 
-		//if result is not empty return it, else throw an exception
+        if (! empty($result)) {
+            return $result;
+        }
 
-		if(! empty($result)) {
-			return $result;
-		}
+        throw new RecordNotFoundException('No Records found');
+    }
 
-		throw new RecordNotFoundException('No Records found');
+    public function delete($id)
+    {
+        //construct a sql query
+        $sql = "DELETE FROM users WHERE id = ?";
 
-	}
+        //create a connection to the database
+        $connection = $this->getConnection();
 
-	public function delete($id)
-	{
-		//construct a sql query
-		$sql = "DELETE FROM users WHERE id = ?";
+        //prepare a statement
+        $statement = $connection->prepare($sql);
 
-		//create a connection to the database
-		$connection = $this->getConnection();
+        //bind params
 
-		//prepare a statement
-		$statement = $connection->prepare($sql);
+        $statement->bindParam(1, $id);
 
-		//bind params
+        //execute the statement
+        $statement->execute();
 
-		$statement->bindParam(1, $id);
+        //check if rows were affected
+        if ($statement->rowCount() > 0) {
+            return true;
+        }
 
-		//execute the statement
-		$statement->execute();
+        return new PDOException("Unable to delete record");
+    }
 
-		//check if rows were affected
-		if($statement->rowCount() > 0) {
-			return true;
-		}
+    public function update($id)
+    {
+    }
 
-		return new PDOException("Unable to delete record");
-	}
+    public function save(User $user)
+    {
+        //construct a sql statement
+        $sql = 'INSERT INTO users (username, password, usernames,token, token_expire) VALUES(?,?,?,?,?)';
 
-	public function update($id)
-	{
-	}
+        //connect to the database
+        $connection = $this->getConnection();
 
-	public function save(User $user)
-	{
-		//construct a sql statement
-		$sql = 'INSERT INTO users (username, password, usernames,token, token_expire) VALUES(?,?,?,?,?)';
+        //prepare a statement
+        $statement = $connection->prepare($sql);
 
-		//connect to the database
-		$connection = $this->getConnection();
+        //bind params to statement
+        $statement->bindParam(1, $user->getUsername());
+        $statement->bindParam(2, $user->getPassword());
+        $statement->bindParam(3, $user->getNames());
+        $statement->bindParam(4, $user->getToken());
+        $statement->bindParam(5, $user->getTokenExpire());
 
-		//prepare a statement
-		$statement = $connection->prepare($sql);
+        //execute query
+        $statement->execute();
 
-		//bind params to statement
-		$statement->bindParam(1, $user->getUsername());
-		$statement->bindParam(2, $user->getPassword());
-		$statement->bindParam(3, $user->getNames());
-		$statement->bindParam(4, $user->getToken());
-		$statement->bindParam(5, $user->getTokenExpire());
+        //check to see if user was saved
+        if ($statement->rowCount() > 0) {
+            return true;
+        }
 
-		//execute query
-		$statement->execute();
+        throw new PDOException("Error:  Record not saved. Please try again");
+    }
 
-		//check to see if user was saved
-		if($statement->rowCount() > 0) {
-			return true;
-		}
-
-		throw new PDOException("Error:  Record not saved. Please try again");
-	}
+    public function toJson(array $object)
+    {
+        if (! is_array($object)) {
+            throw new InvalidArgumentException("Argument must be of type array");
+        }
+        return json_encode($object);
+    }
 }

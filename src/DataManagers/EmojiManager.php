@@ -11,9 +11,10 @@ namespace Verem\Emoji\Api\DAO;
 use PDO;
 use PDOException;
 use Verem\Emoji\Api\Emoji;
-use Verem\Emoji\Api\Utils\Connection;
 use Verem\Emoji\Api\Utils\Queryable;
+use Verem\Emoji\Api\Utils\Connection;
 use Verem\Emoji\Api\Exceptions\RecordNotFoundException;
+use Doctrine\Instantiator\Exception\InvalidArgumentException;
 
 class EmojiManager extends Connection implements Queryable
 {
@@ -32,10 +33,11 @@ class EmojiManager extends Connection implements Queryable
         $statement->bindParam(1, $id);
 
         //get the result
-        $result = $statement->execute();
+        $statement->execute();
 
-        //if affected rows is more than one, return the result;
-        if ($statement->rowCount() > 0) {
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        //if result is not empty
+        if (! empty($result)) {
             return $result;
         }
 
@@ -94,65 +96,97 @@ class EmojiManager extends Connection implements Queryable
 
     public function delete($id)
     {
-		//construct a sql query
-		$sql = "DELETE FROM emojis WHERE id = ?";
+        //construct a sql query
+        $sql = "DELETE FROM emojis WHERE id = ?";
 
-		//create a connection to the database
-		$connection = $this->getConnection();
+        //create a connection to the database
+        $connection = $this->getConnection();
 
-		//prepare a statement
-		$statement = $connection->prepare($sql);
+        //prepare a statement
+        $statement = $connection->prepare($sql);
 
-		//bind params
+        //bind params
 
-		$statement->bindParam(1, $id);
+        $statement->bindParam(1, $id);
 
-		//execute the statement
-		$statement->execute();
+        //execute the statement
+        $statement->execute();
 
-		//check if rows were affected
-		if($statement->rowCount() > 0) {
-			return true;
-		}
+        //check if rows were affected
+        if ($statement->rowCount() > 0) {
+            return true;
+        }
 
-		return new PDOException("Unable to delete record");
+        return new PDOException("Unable to delete record");
     }
 
     public function update($id, Emoji $emoji)
     {
+        //construct a sql statement
+        $sql = "UPDATE emojis SET emojiname = ?, emojichar = ?, created_by = ?,category = ?, updated_at = ?";
 
+        // get a connection to the database
+        $connection = $this->getConnection();
+
+        //prepare a statement;
+        $statement = $connection->prepare($sql);
+
+        //bind params
+        $statement->bindParam(1, $emoji->getName());
+        $statement->bindParam(2, $emoji->getChar());
+        $statement->bindParam(3, $emoji->getCreatedBy());
+        $statement->bindParam(4, $emoji->getCategory());
+        $statement->bindParam(5, $emoji->getUpdatedAt());
+
+        //execute the statement
+        $statement->execute();
+
+        //if statement executed successfully, return true, fail otherwise
+
+        if ($statement->rowCount() > 0) {
+            return true;
+        }
+        throw new PDOException("Unable to update record");
     }
 
-	public function save(Emoji $emoji)
+    public function save(Emoji $emoji)
+    {
+        //construct a sql statement
+        $sql = "INSERT INTO emojis (emojiname,emojichar, keywords,category, creted_at, updated_at, created_by) VALUES(?,?,?,?,?,?,?)";
+
+        //get a database connection
+        $connection = $this->getConnection();
+
+        //prepare a statement
+        $statement = $connection->prepare($sql);
+
+        //bind params
+        $statement->bindParam(1, $emoji->getName());
+        $statement->bindParam(2, $emoji->getChar());
+        $statement->bindParam(3, $emoji->getKeywords());
+        $statement->bindParam(4, $emoji->getCategory());
+        $statement->bindParam(5, $emoji->getCreatedAt());
+        $statement->bindParam(6, $emoji->getUpdatedAt());
+        $statement->bindParam(7, $emoji->getCreatedBy());
+
+        //execute statement
+        $statement->execute();
+
+        //check to see if record has been saved, if it isn't
+        //throw an exception
+
+        if ($statement->rowCount() > 0) {
+            return true;
+        }
+
+        throw new PDOException("Error: Unable to save emoji");
+    }
+
+	public function toJson(array $object)
 	{
-		//construct a sql statement
-		$sql = "INSERT INTO emojis (emojiname,emojichar, keywords,category, creted_at, updated_at, created_by) VALUES(?,?,?,?,?,?,?)";
-
-		//get a database connection
-		$connection = $this->getConnection();
-
-		//prepare a statement
-		$statement = $connection->prepare($sql);
-
-		//bind params
-		$statement->bindParam(1, $emoji->getName());
-		$statement->bindParam(2, $emoji->getChar());
-		$statement->bindParam(3, $emoji->getKeywords());
-		$statement->bindParam(4, $emoji->getCategory());
-		$statement->bindParam(5, $emoji->getCreatedAt());
-		$statement->bindParam(6, $emoji->getUpdatedAt());
-		$statement->bindParam(7, $emoji->getCreatedBy());
-
-		//execute statement
-		$statement->execute();
-
-		//check to see if record has been saved, if it isn't
-		//throw an exception
-
-		if($statement->rowCount() > 0) {
-			return true;
+		if(! is_array($object)) {
+			throw new InvalidArgumentException("Argument must be of type array");
 		}
-
-		throw new PDOException("Error: Unable to save emoji");
+		return json_encode($object);
 	}
 }
