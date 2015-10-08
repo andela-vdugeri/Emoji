@@ -40,7 +40,7 @@ class EmojiManager extends Connection implements Queryable
 
         //if result is not empty
         if ($result) {
-            return json_encode($result);
+            return $result;
         }
 
         throw new RecordNotFoundException("The emoji does not exist in the database");

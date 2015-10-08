@@ -11,47 +11,50 @@ namespace Verem\Emoji\Api;
 use Verem\Emoji\Api\DAO\UserManager;
 use Verem\Emoji\Api\Exceptions\RecordNotFoundException;
 
-class Authenticate extends UserManager
+class Authenticate
 {
-    private $user ;
-    public function __construct(User $user)
+    private $username;
+    private $password;
+
+    public function __construct($username, $password)
     {
-        $this->user = $user;
+        $this->username = $username;
+        $this->password = $password;
     }
 
-    public function Login()
+    public function login()
     {
-        if ($this->isValid(
-          $this->user->getUsername(), $this->user->getPassword())) {
-            $token = $this->getToken($this->$user->getUsername(),
-			  $this->user->getPassword());
-
-			return $token;
+        if ($this->isValid($this->username, $this->password) === true) {
+            $token = $this->getToken($this->username, $this->password);
+            return $token;
         } else {
-			return "User authentication failed";
-		}
+            return json_encode(['Error: '=>'User authentication failed']);
+        }
     }
 
     public function isValid($username, $password)
     {
-       try{
-		   $user = $this->where('username', '=', $username);
-		   if ($user['password'] === $password) {
-			   return true;
-		   } else{
-			   return "Invalid username or password";
-		   }
-	   } catch(RecordNotFoundException $e) {
-		   return $e->getMessage();
-	   }
+        $userManager = new UserManager();
 
+        try {
+            $user = $userManager->where('username', '=', $username);
+            if (!empty($user)) {
+                if ($user['password'] === $password) {
+                    return true;
+                } else {
+                    return json_encode(['message'=>'Invalid username or password']);
+                }
+            } else {
+                return json_encode(['message' => 'User account does not exist']);
+            }
+        } catch (RecordNotFoundException $e) {
+            return json_encode(['Error' => $e->getMessage()]);
+        }
     }
 
-	public function getToken($username, $password)
-	{
-		$token = bin2hex(openssl_random_pseudo_bytes(16));
-		return json_encode([$username,$token]);
-	}
-
-
+    public function getToken($username, $password)
+    {
+        $token = bin2hex(openssl_random_pseudo_bytes(16));
+        return json_encode([$username, $token]);
+    }
 }

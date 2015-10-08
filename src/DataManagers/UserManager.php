@@ -62,9 +62,10 @@ class UserManager extends Connection implements Queryable
 
         $statement->execute();
 
-        //if affected rows is more than one, return the result;
+		$result = $statement->fetch(PDO::FETCH_ASSOC);
+
         if ($statement->rowCount() > 0) {
-            return true;
+            return $result;
         }
 
         throw new RecordNotFoundException("The record does not exist");
