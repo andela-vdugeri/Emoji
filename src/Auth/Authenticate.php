@@ -23,10 +23,13 @@ class Authenticate extends UserManager
     {
         if ($this->isValid(
           $this->user->getUsername(), $this->user->getPassword())) {
-            //TODO: allow access
-        }
+            $token = $this->getToken($this->$user->getUsername(),
+			  $this->user->getPassword());
 
-        //TODO: deny access
+			return $token;
+        } else {
+			return "User authentication failed";
+		}
     }
 
     public function isValid($username, $password)
@@ -43,4 +46,12 @@ class Authenticate extends UserManager
 	   }
 
     }
+
+	public function getToken($username, $password)
+	{
+		$token = bin2hex(openssl_random_pseudo_bytes(16));
+		return json_encode([$username,$token]);
+	}
+
+
 }
