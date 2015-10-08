@@ -17,16 +17,11 @@ use Dotenv\Dotenv;
 class EnvReader extends Dotenv
 {
 	/**
-	 * @var Dotenv $dotEnv
-	 */
-    private $dotEnv;
-
-	/**
 	 * create an instance of the class
 	 */
     public function __construct()
     {
-        $this->dotEnv = parent::__construct(__DIR__.'/../');
+        parent::__construct(__DIR__ .'/../..');
     }
 
 	/**
@@ -34,6 +29,6 @@ class EnvReader extends Dotenv
 	 */
     public function loadEnv()
     {
-        $this->dotEnv->load();
+        $this->load();
     }
 }

@@ -35,13 +35,15 @@ class EmojiManager extends Connection implements Queryable
         //get the result
         $statement->execute();
 
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
+		$statement->setFetchMode(PDO::FETCH_ASSOC);
+        $result = $statement->fetch();
+
         //if result is not empty
-        if (! empty($result)) {
-            return $result;
+        if ($result) {
+            return json_encode($result);
         }
 
-        throw new RecordNotFoundException("The user does not exist in the database");
+        throw new RecordNotFoundException("The emoji does not exist in the database");
     }
 
     public function where($column, $operand, $value)
@@ -65,7 +67,7 @@ class EmojiManager extends Connection implements Queryable
 
         //if affected rows is more than one, return the result;
         if ($statement->rowCount() > 0) {
-            return true;
+            return json_encode($statement->fetchAll(PDO::FETCH_ASSOC));
         }
 
         throw new RecordNotFoundException("The record does not exist");
@@ -83,7 +85,8 @@ class EmojiManager extends Connection implements Queryable
         $statement = $connection->query($sql);
 
         //fetch result
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $result = $statement->fetchAll(PDO::FETCH_CLASS);
+
 
         //if result is not empty return it, else throw an exception
 
@@ -123,7 +126,7 @@ class EmojiManager extends Connection implements Queryable
     public function update($id, Emoji $emoji)
     {
         //construct a sql statement
-        $sql = "UPDATE emojis SET emojiname = ?, emojichar = ?, created_by = ?,category = ?, updated_at = ?";
+        $sql = "UPDATE emojis SET emojiname = ?, emojichar = ?, category = ?, updated_at = ? WHERE id = ?";
 
         // get a connection to the database
         $connection = $this->getConnection();
@@ -134,12 +137,14 @@ class EmojiManager extends Connection implements Queryable
         //bind params
         $statement->bindParam(1, $emoji->getName());
         $statement->bindParam(2, $emoji->getChar());
-        $statement->bindParam(3, $emoji->getCreatedBy());
-        $statement->bindParam(4, $emoji->getCategory());
-        $statement->bindParam(5, $emoji->getUpdatedAt());
+        $statement->bindParam(3, $emoji->getCategory());
+        $statement->bindParam(4, $emoji->getUpdatedAt());
+		$statement->bindParam(5, $id);
+
 
         //execute the statement
         $statement->execute();
+
 
         //if statement executed successfully, return true, fail otherwise
 
@@ -152,15 +157,17 @@ class EmojiManager extends Connection implements Queryable
     public function save(Emoji $emoji)
     {
         //construct a sql statement
-        $sql = "INSERT INTO emojis (emojiname,emojichar, keywords,category, creted_at, updated_at, created_by) VALUES(?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO emojis (emojiname, emojichar, keywords, category, created_at, updated_at, created_by) VALUES(?,?,?,?,?,?,?)";
 
+		//var_export($emoji);
         //get a database connection
         $connection = $this->getConnection();
-
         //prepare a statement
         $statement = $connection->prepare($sql);
 
+
         //bind params
+
         $statement->bindParam(1, $emoji->getName());
         $statement->bindParam(2, $emoji->getChar());
         $statement->bindParam(3, $emoji->getKeywords());
@@ -170,22 +177,21 @@ class EmojiManager extends Connection implements Queryable
         $statement->bindParam(7, $emoji->getCreatedBy());
 
         //execute statement
-        $statement->execute();
+		$statement->execute();
 
         //check to see if record has been saved, if it isn't
         //throw an exception
-
         if ($statement->rowCount() > 0) {
             return true;
         }
 
-        throw new PDOException("Error: Unable to save emoji");
+        throw new PDOException(json_encode(["message" => "Error: Unable to save emoji"]));
     }
 
 	public function toJson(array $object)
 	{
 		if(! is_array($object)) {
-			throw new InvalidArgumentException("Argument must be of type array");
+			throw new InvalidArgumentException(json_encode(["message" =>"Argument must be of type array"]));
 		}
 		return json_encode($object);
 	}

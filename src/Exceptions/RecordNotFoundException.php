@@ -14,7 +14,7 @@ use Exception;
 class RecordNotFoundException extends Exception {
 
 
-	private $message;
+	protected $message;
 	public function __construct($message)
 	{
 		parent::__construct($message);

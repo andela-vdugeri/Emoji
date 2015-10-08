@@ -1,12 +1,9 @@
 {
   "name": "verem/emoji",
   "description": "an api to manipulate nigerian emojis",
-  "require": {
-    "slim/slim": "3.x-dev",
-    "vlucas/phpdotenv": "^2.1@dev"
-  },
+
   "require-dev": {
-    "phpspec/phpspec": "^2.2@dev"
+    "phpspec/phpspec": "2.2"
   },
   "license": "MIT",
   "authors": [
@@ -15,13 +12,13 @@
       "email": "verem.dugeri@andela.co"
     }
   ],
-  "minimum-stability": "dev",
+
   "autoload": {
     "classmap": [
-      "src/"
+      "src"
     ],
     "psr-4": {
-      "Verem\\Emoji\\Api\\": "src/"
+      "Verem\\Emoji\\Api\\": "src"
     }
   },
   "autoload-dev": {

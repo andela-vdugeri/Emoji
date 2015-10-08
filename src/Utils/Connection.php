@@ -77,9 +77,10 @@ class Connection extends EnvReader
         $this->dbName      =    getenv('DB_NAME');
         $this->password    =    getenv('DB_PASSWORD');
         $this->username    =    getenv('DB_USERNAME');
-        $this->connection  =    getenv('DB_CONNECTIOn');
+        $this->connection  =    getenv('DB_CONNECTION');
 
         //construct the data source
         $this->dsn = $this->connection.':host='.$this->host.';dbname='.$this->dbName;
+
     }
 }

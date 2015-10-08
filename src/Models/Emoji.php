@@ -30,7 +30,7 @@ class Emoji
 	 * @var array keywords The array of keywords describing
 	 * the object
 	 */
-    private $keywords = [];
+    private $keywords;
 
 	/**
 	 * @var string $category The category the emoji belongs to
@@ -56,12 +56,12 @@ class Emoji
 	/**
 	 * @param $name
 	 * @param $char
-	 * @param array $keywords
+	 * @param string $keywords
 	 * @param $category
 	 *
 	 * Create an Emoji instance
 	 */
-    public function __construct($name, $char, $keywords = [], $category)
+    public function __construct($name, $char, $keywords, $category)
     {
         $this->name  	= 	$name;
         $this->char 	= 	$char;
@@ -98,6 +98,11 @@ class Emoji
     {
         $this->createdBy = $createdBy;
     }
+
+	public function setKeywords($keywords)
+	{
+		$this->keywords = $keywords;
+	}
 
 	/**
 	 * @return string
@@ -168,4 +173,5 @@ class Emoji
     {
         return $this->createdBy;
     }
+
 }
