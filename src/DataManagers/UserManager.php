@@ -195,4 +195,42 @@ class UserManager extends Connection implements Queryable
 
 	}
 
+	/**
+	 * @param $token
+	 * @return string
+	 *
+	 * Delete the token and related token content from the database
+	 */
+	public function invalidateSession($token)
+	{
+		//construct a sql query
+		$sql = "UPDATE users SET token = NULL, token_expire = NULL WHERE token = ?";
+
+		//get a connection
+		$connection = $this->getConnection();
+
+		//prepare a statement
+		$statement = $connection->prepare($sql);
+
+		//bind params
+		$statement->bindParam(1, $token);
+
+		//execute the statement
+		$statement->execute();
+
+		//check to see if the row was affected
+		if($statement->rowCount() > 0) {
+			return json_encode([
+			  'statusCode' 	=> 	200,
+			  'message'		=>  'row updated'
+			]);
+		}
+
+		return json_encode([
+			'statusCode' => 304,
+			'message'	 => 'No rows affected'
+		]);
+
+	}
+
 }

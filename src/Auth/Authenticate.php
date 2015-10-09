@@ -25,7 +25,7 @@ class Authenticate
     public function login()
     {
         if ($this->isValid($this->username, $this->password) === true) {
-            $token = $this->getToken($this->username, $this->password);
+            $token = $this->getToken();
             return $token;
         } else {
             return json_encode(['Error: '=>'User authentication failed']);
@@ -52,7 +52,7 @@ class Authenticate
         }
     }
 
-    public function getToken($username, $password)
+    public function getToken()
     {
         $token = bin2hex(openssl_random_pseudo_bytes(16));
 		$tokenExpire = date('Y-m-d H:i:s', strtotime('+ 1 hour'));

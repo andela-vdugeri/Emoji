@@ -20,7 +20,6 @@ $app = new Slim();
 //route middleware
 $authenticator = function () use ($app) {
     //determine if the user has authorization.
-
     $authorization = $app->request->headers->get('Authorization');
 
     if (! is_null($authorization)) {
@@ -29,7 +28,7 @@ $authenticator = function () use ($app) {
         try {
             $user = $manager->where('token', '=', $authorization);
             if ($user['token_expire'] < date('Y-m-d H:i:s')) {
-                $app->stop();
+                $app->halt(401);
             }
         } catch (RecordNotFoundException $e) {
             $app->response->status(401);
@@ -41,18 +40,9 @@ $authenticator = function () use ($app) {
     }
 };
 
-
-$app->get('/', function () {
-    $auth = new Authenticate('danver', 'password');
-    $token = $auth->login();
-    echo $token;
-});
-
-$app->get('/login', function () {
-    $auth = new Authenticate('danverem', 'password');
-    $token = $auth->login();
-    echo $token;
-});
+/**
+ * The login route for the post method
+ */
 
 $app->post('/auth/login', function () use ($app) {
 
@@ -66,7 +56,7 @@ $app->post('/auth/login', function () use ($app) {
     $data = json_decode($token, true);
 
     $result = null;
-
+	//if user token exists
     if (array_key_exists('token', $data)) {
 
         //update the user table
@@ -78,11 +68,29 @@ $app->post('/auth/login', function () use ($app) {
 
     if (json_decode($result, true)['statusCode'] == 200) {
         $response = $app->response();
-        $response['authorization'] = $data['token'];
+        $response['Authorization'] = $data['token'];
     }
 });
 
-$app->get('/emojis', $authenticator, function () {
+/**
+ * Log out of the application
+ */
+
+$app->get('/auth/logout',$authenticator, function() use ($app) {
+	//remove token from session
+	$token = $app->request->headers->get('Authorization');
+
+
+	//remove token and time from database
+	$manager = new UserManager();
+	$manager->invalidateSession($token);
+
+	//set authorization headers to null;
+	$response = $app->response();
+	$response['Authorization'] = null;
+});
+
+$app->get('/emojis', function () {
     $manager = new EmojiManager();
     $emojis = $manager->all();
     echo $manager->toJson($emojis);
@@ -97,7 +105,7 @@ $app->get('/emojis/:id', function ($id) {
 /**
  * Create an emoji
  */
-$app->post('/emojis', function () use ($app) {
+$app->post('/emojis',$authenticator, function () use ($app) {
 
     $name =  $app->request->params('emojiname');
     $char = $app->request->params('emojichar');
@@ -121,7 +129,28 @@ $app->post('/emojis', function () use ($app) {
 /**
  * Update an emoji matching the specified id
  */
-$app->put('/emojis/:id', function ($id) {
+$app->put('/emojis/:id',$authenticator, function ($id) use ($app) {
+
+	$name = $app->request->params('emojiName');
+	$char  = $app->request->params('emojiChar');
+	$category   = $app->request->params('category');
+	$updatedAt = $app->request->params('updatedAt');
+	$keywords  = $app->request->params('keywords');
+
+	$emoji = new Emoji($name, $char, $keywords, $category);
+	$emoji->setUpdatedAt($updatedAt);
+	$manager = new EmojiManager();
+	try{
+		$manager->update($id, $emoji);
+	} catch (PDOException $e) {
+
+	}
+});
+
+/**
+ * Do a partial update of an emoji
+ */
+$app->patch('/emojis/:id', function() use ($app){
 
 });
 
@@ -129,7 +158,7 @@ $app->put('/emojis/:id', function ($id) {
 /**
  * delete an emoji by the specified id
  */
-$app->delete('/emojis/:id', function ($id) {
+$app->delete('/emojis/:id',$authenticator, function ($id) {
 
     $manager = new EmojiManager();
     try {
