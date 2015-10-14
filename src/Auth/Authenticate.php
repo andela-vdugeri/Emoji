@@ -48,7 +48,7 @@ class Authenticate
                 return json_encode(['message' => 'User account does not exist']);
             }
         } catch (RecordNotFoundException $e) {
-            return json_encode(['Error' => $e->getMessage()]);
+            return json_encode(['Error' => "Invalid username or password"]);
         }
     }
 

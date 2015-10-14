@@ -13,17 +13,23 @@
   ],
   "autoload": {
     "classmap": [
-      "src"
+      "src/"
     ],
     "psr-4": {
-      "Verem\\Emoji\\Api\\": "src"
+      "Verem\\Emoji\\Api\\": "src/"
     }
   },
   "autoload-dev": {
-    "Verem\\Emoji\\Test\\": "tests"
+    "spec\\": "spec"
   },
   "require": {
     "vlucas/phpdotenv": "^2.0",
     "slim/slim": "^2.6"
+  },
+  "require-dev": {
+    "phpspec/phpspec": "~2.0"
+  },
+  "config": {
+    "bin-dir": "bin"
   }
 }

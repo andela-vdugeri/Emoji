@@ -185,7 +185,7 @@ class EmojiManager extends Connection implements Queryable
             return true;
         }
 
-        throw new PDOException(json_encode(["message" => "Error: Unable to save emoji"]));
+        throw new PDOException("Error: Unable to save emoji");
     }
 
 	public function toJson(array $object)
