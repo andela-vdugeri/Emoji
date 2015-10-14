@@ -16,19 +16,19 @@ use Dotenv\Dotenv;
 
 class EnvReader extends Dotenv
 {
-	/**
-	 * create an instance of the class
-	 */
-    public function __construct()
-    {
-        parent::__construct(__DIR__ .'/../..');
-    }
+    /**
+     * create an instance of the class
+     */
+     public function __construct()
+     {
+         parent::__construct($_SERVER['DOCUMENT_ROOT']);
+     }
 
-	/**
-	 * load the environment file.
-	 */
-    public function loadEnv()
-    {
-        $this->load();
-    }
+     /**
+     * load the environment file.
+     */
+     public function loadEnv()
+     {
+         $this->load();
+     }
 }

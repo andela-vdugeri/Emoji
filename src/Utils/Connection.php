@@ -13,44 +13,44 @@ use PDOException;
 
 class Connection extends EnvReader
 {
-	/**
+	 /**
 	 * @var string $dsn The data source name for database connection
 	 */
-    private $dsn;
+     private $dsn;
 
-	/**
+	 /**
 	 * @var string $host The database connection host
 	 */
-	private $host;
+	 private $host;
 
-	/**
+	 /**
 	 * @var string $dbName Database name
 	 */
-	private $dbName;
+	 private $dbName;
 
-	/**
+	 /**
 	 * @var string $username Database username
 	 */
-	private $username;
+	 private $username;
 
-	/**
+	 /**
 	 * @var string $password Database password
 	 */
-	private $password;
+	 private $password;
 
-	/**
+	 /**
 	 * @var string $connection the connection driver
 	 */
-    private $connection;
+     private $connection;
 
-	/**
+	 /**
 	 * @return null|PDO
 	 *
 	 * Try to get a connection to the database. Fail with
 	 * an error is connection is not successful.
 	 */
-    public function getConnection()
-    {
+     public function getConnection()
+     {
         //initialize database configurations
         $this->initConfigs();
         //try to get a pdo connection, fail if an error occurs
@@ -62,13 +62,13 @@ class Connection extends EnvReader
         }
 
         return $connection;
-    }
+     }
 
-	/**
+	 /**
 	 * initialise database connection configurations & settings
 	 */
-    public function initConfigs()
-    {
+     public function initConfigs()
+     {
         //load the env file
         $this->loadEnv();
 
@@ -82,5 +82,5 @@ class Connection extends EnvReader
         //construct the data source
         $this->dsn = $this->connection.':host='.$this->host.';dbname='.$this->dbName;
 
-    }
+     }
 }

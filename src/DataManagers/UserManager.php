@@ -18,8 +18,15 @@ use Verem\Emoji\Api\Exceptions\RecordNotFoundException;
 
 class UserManager extends Connection implements Queryable
 {
-    public function find($id)
-    {
+	 /**
+	 * Find a user matching the specified id.
+	 *
+	 * @param $id
+	 * @return bool
+	 * @throws RecordNotFoundException
+	 */
+     public function find($id)
+     {
         //create sql statement
         $sql = "SELECT * FROM users WHERE id = ?";
 
@@ -41,10 +48,18 @@ class UserManager extends Connection implements Queryable
         }
 
         throw new RecordNotFoundException("The user does not exist in the database");
-    }
+     }
 
-    public function where($column, $operand, $value)
-    {
+	 /**
+	 * Find a user with a property matching the specified column
+	 * @param $column
+	 * @param $operand
+	 * @param $value
+	 * @return mixed
+	 * @throws RecordNotFoundException
+	 */
+     public function where($column, $operand, $value)
+     {
         //construct a sql query
         $sql = "SELECT * FROM users WHERE $column $operand ?";
 
@@ -69,10 +84,16 @@ class UserManager extends Connection implements Queryable
         }
 
         throw new RecordNotFoundException("The record does not exist");
-    }
+     }
 
-    public function all()
-    {
+	 /**
+	 * Get all users from the database
+	 *
+	 * @return array
+	 * @throws RecordNotFoundException
+	 */
+     public function all()
+     {
         //construct a sql query
         $sql = "SELECT * FROM users";
 
@@ -92,10 +113,15 @@ class UserManager extends Connection implements Queryable
         }
 
         throw new RecordNotFoundException('No Records found');
-    }
+     }
 
-    public function delete($id)
-    {
+	 /**
+	 * Delete a user from the database with the specified id.
+	 * @param $id
+	 * @return bool|PDOException
+	 */
+     public function delete($id)
+     {
         //construct a sql query
         $sql = "DELETE FROM users WHERE id = ?";
 
@@ -118,14 +144,16 @@ class UserManager extends Connection implements Queryable
         }
 
         return new PDOException("Unable to delete record");
-    }
+     }
 
-    public function update($id)
-    {
-    }
-
-    public function save(User $user)
-    {
+	 /**
+	 * Save a newly created user to database
+	 *
+	 * @param User $user
+	 * @return bool
+	 */
+     public function save(User $user)
+     {
         //construct a sql statement
         $sql = 'INSERT INTO users (username, password, usernames,token, token_expire) VALUES(?,?,?,?,?)';
 
@@ -151,18 +179,24 @@ class UserManager extends Connection implements Queryable
         }
 
         throw new PDOException("Error:  Record not saved. Please try again");
-    }
+     }
 
-    public function toJson(array $object)
-    {
+	 /**
+	 * return the json format of the array argument
+	 *
+	 * @param array $object
+	 * @return string
+	 */
+     public function toJson(array $object)
+     {
         if (! is_array($object)) {
             throw new InvalidArgumentException("Argument must be of type array");
         }
         return json_encode($object);
-    }
+     }
 
-	public function updateToken($expiryDate,$token, $username)
-	{
+	 public function updateToken($expiryDate,$token, $username)
+	 {
 		//construct a sql
 		$sql = "UPDATE users SET token_expire = ?, token = ? WHERE username = ?";
 
@@ -193,16 +227,16 @@ class UserManager extends Connection implements Queryable
 			'message'	 => 'Unable to set token expiry date'
 		]);
 
-	}
+	 }
 
-	/**
+	 /**
 	 * @param $token
 	 * @return string
 	 *
 	 * Delete the token and related token content from the database
 	 */
-	public function invalidateSession($token)
-	{
+	 public function invalidateSession($token)
+	 {
 		//construct a sql query
 		$sql = "UPDATE users SET token = NULL, token_expire = NULL WHERE token = ?";
 
@@ -231,6 +265,6 @@ class UserManager extends Connection implements Queryable
 			'message'	 => 'No rows affected'
 		]);
 
-	}
+	 }
 
 }

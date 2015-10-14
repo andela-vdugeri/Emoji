@@ -13,15 +13,15 @@ namespace Verem\Emoji\Api\Utils;
 
 interface Queryable
 {
-    /**
+     /**
      * @param $id
      * @return mixed
      *
      * find a record in the database
      */
-    public function find($id);
+     public function find($id);
 
-    /**
+     /**
      * @param $column
      * @param $operand
      * @param $value
@@ -29,29 +29,29 @@ interface Queryable
      *
      * perform a where search in the database
      */
-    public function where($column, $operand, $value);
+     public function where($column, $operand, $value);
 
-    /**
+     /**
      * @return mixed
      *
      * get all records in the database table
      */
-    public function all();
+     public function all();
 
-    /**
+     /**
      * @param $id
      * @return mixed
      *
      * Delete a record
      */
-    public function delete($id);
+     public function delete($id);
 
-    /**
+     /**
      * @param array $object
      * @return mixed
      *
      * return the json object of the array passed in
      * as an argument
      */
-    public function toJson(array $object);
+     public function toJson(array $object);
 }

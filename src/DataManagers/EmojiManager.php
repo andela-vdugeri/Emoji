@@ -18,8 +18,15 @@ use Doctrine\Instantiator\Exception\InvalidArgumentException;
 
 class EmojiManager extends Connection implements Queryable
 {
-    public function find($id)
-    {
+    /**
+     * find an emoji matching the specified id.
+     *
+     * @param $id
+     * @return mixed
+     * @throws RecordNotFoundException
+     */
+     public function find($id)
+     {
         //create sql statement
         $sql = "SELECT * FROM emojis WHERE id = ?";
 
@@ -35,7 +42,7 @@ class EmojiManager extends Connection implements Queryable
         //get the result
         $statement->execute();
 
-		$statement->setFetchMode(PDO::FETCH_ASSOC);
+        $statement->setFetchMode(PDO::FETCH_ASSOC);
         $result = $statement->fetch();
 
         //if result is not empty
@@ -44,10 +51,19 @@ class EmojiManager extends Connection implements Queryable
         }
 
         throw new RecordNotFoundException("The emoji does not exist in the database");
-    }
+     }
 
-    public function where($column, $operand, $value)
-    {
+     /**
+     * Search for an  emoji by column name
+     *
+     * @param $column
+     * @param $operand
+     * @param $value
+     * @return string
+     * @throws RecordNotFoundException
+     */
+     public function where($column, $operand, $value)
+     {
         //construct a sql query
         $sql = "SELECT * FROM emojis WHERE $column $operand ?";
 
@@ -71,10 +87,16 @@ class EmojiManager extends Connection implements Queryable
         }
 
         throw new RecordNotFoundException("The record does not exist");
-    }
+     }
 
-    public function all()
-    {
+     /**
+     * Fetch all emojis from the database
+     *
+     * @return array
+     * @throws RecordNotFoundException
+     */
+     public function all()
+     {
         //construct a sql query
         $sql = "SELECT * FROM emojis";
 
@@ -95,11 +117,17 @@ class EmojiManager extends Connection implements Queryable
         }
 
         throw new RecordNotFoundException('No Records found');
-    }
+     }
 
-    public function delete($id)
-    {
-        //construct a sql query
+     /**
+     * Delete an emoji that matches the specified id.
+     *
+     * @param $id
+     * @return bool|PDOException
+     */
+     public function delete($id)
+     {
+         //construct a sql query
         $sql = "DELETE FROM emojis WHERE id = ?";
 
         //create a connection to the database
@@ -120,12 +148,20 @@ class EmojiManager extends Connection implements Queryable
             return true;
         }
 
-        return new PDOException("Unable to delete record");
-    }
+         return new PDOException("Unable to delete record");
+     }
 
-    public function update($id, Emoji $emoji)
-    {
-        //construct a sql statement
+     /**
+	 * Update an emoji matching the specified id
+	 * with the object record
+	 *
+     * @param $id
+     * @param Emoji $emoji
+     * @return bool
+     */
+     public function update($id, Emoji $emoji)
+     {
+         //construct a sql statement
         $sql = "UPDATE emojis SET emojiname = ?, emojichar = ?, category = ?, updated_at = ? WHERE id = ?";
 
         // get a connection to the database
@@ -136,10 +172,10 @@ class EmojiManager extends Connection implements Queryable
 
         //bind params
         $statement->bindParam(1, $emoji->getName());
-        $statement->bindParam(2, $emoji->getChar());
-        $statement->bindParam(3, $emoji->getCategory());
-        $statement->bindParam(4, $emoji->getUpdatedAt());
-		$statement->bindParam(5, $id);
+         $statement->bindParam(2, $emoji->getChar());
+         $statement->bindParam(3, $emoji->getCategory());
+         $statement->bindParam(4, $emoji->getUpdatedAt());
+         $statement->bindParam(5, $id);
 
 
         //execute the statement
@@ -151,15 +187,20 @@ class EmojiManager extends Connection implements Queryable
         if ($statement->rowCount() > 0) {
             return true;
         }
-        throw new PDOException("Unable to update record");
-    }
+         throw new PDOException("Unable to update record");
+     }
 
-    public function save(Emoji $emoji)
-    {
+	 /**
+	 * Save a newly created Emoji to database
+	 *
+	 * @param Emoji $emoji
+	 * @return bool
+	 */
+     public function save(Emoji $emoji)
+     {
         //construct a sql statement
         $sql = "INSERT INTO emojis (emojiname, emojichar, keywords, category, created_at, updated_at, created_by) VALUES(?,?,?,?,?,?,?)";
 
-		//var_export($emoji);
         //get a database connection
         $connection = $this->getConnection();
         //prepare a statement
@@ -177,7 +218,7 @@ class EmojiManager extends Connection implements Queryable
         $statement->bindParam(7, $emoji->getCreatedBy());
 
         //execute statement
-		$statement->execute();
+        $statement->execute();
 
         //check to see if record has been saved, if it isn't
         //throw an exception
@@ -186,13 +227,19 @@ class EmojiManager extends Connection implements Queryable
         }
 
         throw new PDOException("Error: Unable to save emoji");
-    }
+     }
 
-	public function toJson(array $object)
-	{
-		if(! is_array($object)) {
-			throw new InvalidArgumentException(json_encode(["message" =>"Argument must be of type array"]));
-		}
-		return json_encode($object);
-	}
+	 /**
+	 * convert an array to a json object
+	 *
+	 * @param array $object
+	 * @return string
+	 */
+	 public function toJson(array $object)
+     {
+        if (! is_array($object)) {
+            throw new InvalidArgumentException(json_encode(["message" =>"Argument must be of type array"]));
+        }
+        return json_encode($object);
+     }
 }
