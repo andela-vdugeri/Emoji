@@ -51,8 +51,8 @@ class EmojiManagerSpec extends ObjectBehavior
 			->andReturnValues([
 			  'emojiname' => 'smiley',
 			  'emojichar' => '34e54\3435\6edf45\ux98',
-			  'keywords'	=> 'smiles',
-			  'category' 	=> 'emoticon',
+			  'keywords'  => 'smiles',
+			  'category'  => 'emoticon',
 			  'created_at'=> '2015-10-16 12:22:45',
 			  'updated_at'=> '2015-10-16 12:22:45'
 			]);
