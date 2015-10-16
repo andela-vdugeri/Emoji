@@ -27,8 +27,8 @@ class EmojiManagerSpec extends ObjectBehavior
 			->andReturn([
 			  'emojiname' => 'dancer',
 			  'emojichar' => '34e54d\343ed\6edf75\ux98',
-			  'keywords'	=> 'dance, girl, excited',
-			  'category' 	=> 'people',
+			  'keywords'  => 'dance, girl, excited',
+			  'category'  => 'people',
 			  'created_at'=> '2015-10-15 12:22:45',
 			  'updated_at'=> '2015-10-15 12:22:45'
 			]);
