@@ -20,7 +20,10 @@
     }
   },
   "autoload-dev": {
-    "spec\\": "spec"
+    "classmap":[
+      "spec/"
+    ],
+    "spec\\": "spec/"
   },
   "require": {
     "vlucas/phpdotenv": "^2.0",

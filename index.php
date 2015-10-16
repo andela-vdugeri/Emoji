@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: andela
+ * @author : Verem Dugeri
  * Date: 10/8/15
  * Time: 9:30 AM
  */
@@ -19,33 +19,33 @@ $app = new Slim();
 
 //route middleware
 $authenticator = function () use ($app) {
-	//determine if the user has authorization.
-	$authorization = $app->request->headers->get('Authorization');
+    //determine if the user has authorization.
+    $authorization = $app->request->headers->get('Authorization');
 
-	if (!is_null($authorization)) {
-		//check token expiry
-		$manager = new UserManager();
-		try {
-			$user = $manager->where('token', '=', $authorization);
-			if ($user['token_expire'] < date('Y-m-d H:i:s')) {
-				return json_encode([
-				  'statusCode' => 401,
-				  'message' => 'You have no authorization'
-				]);
-			}
-			$app->response->header('Authorization', $authorization);
-		} catch (RecordNotFoundException $e) {
-			return json_encode([
-			  'status' => 401,
-			  'message' => 'You have no authorization'
-			]);
-		}
-	} else {
-		return json_encode([
-		  'status' => 401,
-		  'message' => 'You have no authorization'
-		]);
-	}
+    if (!is_null($authorization)) {
+        //check token expiry
+        $manager = new UserManager();
+        try {
+            $user = $manager->where('token', '=', $authorization);
+            if ($user['token_expire'] < date('Y-m-d H:i:s')) {
+                return json_encode([
+                  'status' => 401,
+                  'message' => 'You have no authorization'
+                ]);
+            }
+            $app->response->header('Authorization', $authorization);
+        } catch (RecordNotFoundException $e) {
+            return json_encode([
+              'status' => 401,
+              'message' => 'You have no authorization'
+            ]);
+        }
+    } else {
+        return json_encode([
+          'status' => 401,
+          'message' => 'You have no authorization'
+        ]);
+    }
 };
 
 /**
@@ -54,55 +54,70 @@ $authenticator = function () use ($app) {
 
 $app->post('/auth/login', function () use ($app) {
 
-	$username = $app->request->params('username');
-	$password = $app->request->params('password');
+    $username = $app->request->params('username');
+    $password = $app->request->params('password');
 
-	$auth = new Authenticate($username, $password);
+    $auth = new Authenticate($username, $password);
 
-	$token = $auth->login();
+    $token = $auth->login();
 
-	$data = json_decode($token, true);
+    $data = json_decode($token, true);
 
-	$result = null;
-	//if user token exists
-	if (array_key_exists('token', $data)) {
+    $result = null;
+    //if user token exists
+    if (array_key_exists('token', $data)) {
 
-		//update the user table
-		$manager = new UserManager();
+        //update the user table
+        $manager = new UserManager();
 
-		$result = $manager->updateToken(
-		  $data['expiry'], $data['token'], $username);
-	}
+        $result = $manager->updateToken(
+          $data['expiry'], $data['token'], $username);
+    }
 
-	if (json_decode($result, true)['statusCode'] == 200) {
-		$app->response()->header('Authorization', $data['token']);
-	}
+    if (json_decode($result, true)['status'] == 200) {
+        $app->response()->header('Authorization', $data['token']);
+    }
 });
 
 /**
  * Log out of the application
  */
 $app->get('/auth/logout', $authenticator, function () use ($app) {
-	//remove token from session
-	$token = $app->request->headers->get('Authorization');
-	//remove token and expiry time from database
-	$manager = new UserManager();
-	$manager->invalidateSession($token);
-	//set authorization headers to null;
-	$response = $app->response();
-	$response['Authorization'] = null;
+    //remove token from session
+    $token = $app->request->headers->get('Authorization');
+    //remove token and expiry time from database
+    $manager = new UserManager();
+    $manager->invalidateSession($token);
+    //set authorization headers to null;
+    $response = $app->response();
+    $response['Authorization'] = null;
 });
 
+/**
+ * Fetch all emojis from the database
+ */
 $app->get('/emojis', function () {
-	$manager = new EmojiManager();
-	$emojis = $manager->all();
-	return $manager->toJson($emojis);
+    $manager = new EmojiManager();
+    $emojis = $manager->all();
+    return $manager->toJson($emojis);
 });
 
+/**
+ * Get an emoji from the database matching the
+ * particular id
+ */
 $app->get('/emojis/:id', function ($id) {
-	$manager = new EmojiManager();
-	$emoji = $manager->find($id);
-	echo $manager->toJson($emoji);
+    $manager = new EmojiManager();
+    try {
+        $emoji = $manager->find($id);
+    } catch (RecordNotFoundException $e) {
+		return $manager->toJson([
+			'status' => 204,
+			'message' => 'No record found'
+		]);
+    }
+
+    echo $manager->toJson($emoji);
 });
 
 /**
@@ -110,40 +125,39 @@ $app->get('/emojis/:id', function ($id) {
  */
 $app->post('/emojis', $authenticator, function () use ($app) {
 
-	$name = $app->request->params('emojiname');
-	$char = $app->request->params('emojichar');
-	$category = $app->request->params('category');
-	$createdBy = $app->request->params('created_by');
-	$createdAt = $app->request->params('created_at');
-	$updatedAt = $app->request->params('updated_at');
-	$keywords = $app->request->params('keywords');
+    $name = $app->request->params('emojiname');
+    $char = $app->request->params('emojichar');
+    $category = $app->request->params('category');
+    $createdBy = $app->request->params('created_by');
+    $createdAt = $app->request->params('created_at');
+    $updatedAt = $app->request->params('updated_at');
+    $keywords = $app->request->params('keywords');
 
-	$emoji = new Emoji($name, $char, $keywords, $category);
+    $emoji = new Emoji($name, $char, $keywords, $category);
 
-	$emoji->setUpdatedAt($updatedAt);
-	$emoji->setCreatedAt($createdAt);
-	$emoji->setCreatedBy($createdBy);
+    $emoji->setUpdatedAt($updatedAt);
+    $emoji->setCreatedAt($createdAt);
+    $emoji->setCreatedBy($createdBy);
 
-	$manager = new EmojiManager();
-	try {
-		$isSaved = $manager->save($emoji);
-		if ($isSaved) {
-
-			return json_encode([
-				'status' => 201,
-				'message' => 'Record created'
-			]);
-		}
-		return json_encode([
-			'status' => 500,
-			'message' => 'An error occurred while fulfilling request.'
-		]);
-	} catch(PDOException $e) {
-		return json_encode([
-			'status' => 500,
-			'message' => $e->getMessage()
-		]);
-	}
+    $manager = new EmojiManager();
+    try {
+        $isSaved = $manager->save($emoji);
+        if ($isSaved) {
+            return json_encode([
+                'status' => 201,
+                'message' => 'Record created'
+            ]);
+        }
+        return json_encode([
+            'status' => 500,
+            'message' => 'An error occurred while fulfilling request.'
+        ]);
+    } catch (PDOException $e) {
+        return json_encode([
+            'status' => 500,
+            'message' => $e->getMessage()
+        ]);
+    }
 
 
 });
@@ -153,33 +167,33 @@ $app->post('/emojis', $authenticator, function () use ($app) {
  */
 $app->put('/emojis/:id', $authenticator, function ($id) use ($app) {
 
-	$name = $app->request->params('emojiName');
-	$char = $app->request->params('emojiChar');
-	$category = $app->request->params('category');
-	$updatedAt = $app->request->params('updatedAt');
-	$keywords = $app->request->params('keywords');
+    $name = $app->request->params('emojiName');
+    $char = $app->request->params('emojiChar');
+    $category = $app->request->params('category');
+    $updatedAt = $app->request->params('updatedAt');
+    $keywords = $app->request->params('keywords');
 
-	$emoji = new Emoji($name, $char, $keywords, $category);
-	$emoji->setUpdatedAt($updatedAt);
-	$manager = new EmojiManager();
-	try {
-		$result = $manager->update($id, $emoji);
-		if ($result) {
-			return json_encode([
-			  'status' => 200,
-			  'message' => 'Record modified'
-			]);
-		}
-		return json_encode([
-		  'status' => '500',
-		  'message' => 'An error occured while fulfilling request.'
-		]);
-	} catch (PDOException $e) {
-		return json_encode([
-		  'status' => 304,
-		  'message' => 'Unable to update record'
-		]);
-	}
+    $emoji = new Emoji($name, $char, $keywords, $category);
+    $emoji->setUpdatedAt($updatedAt);
+    $manager = new EmojiManager();
+    try {
+        $result = $manager->update($id, $emoji);
+        if ($result) {
+            return json_encode([
+              'status' => 200,
+              'message' => 'Record modified'
+            ]);
+        }
+        return json_encode([
+          'status' => '500',
+          'message' => 'An error occured while fulfilling request.'
+        ]);
+    } catch (PDOException $e) {
+        return json_encode([
+          'status' => 304,
+          'message' => 'Unable to update record'
+        ]);
+    }
 });
 
 /**
@@ -187,33 +201,33 @@ $app->put('/emojis/:id', $authenticator, function ($id) use ($app) {
  */
 $app->patch('/emojis/:id', $authenticator, function ($id) use ($app) {
 
-	$name = $app->request->params('emojiName');
-	$char = $app->request->params('emojiChar');
-	$category = $app->request->params('category');
-	$updatedAt = $app->request->params('updatedAt');
-	$keywords = $app->request->params('keywords');
+    $name = $app->request->params('emojiName');
+    $char = $app->request->params('emojiChar');
+    $category = $app->request->params('category');
+    $updatedAt = $app->request->params('updatedAt');
+    $keywords = $app->request->params('keywords');
 
-	$emoji = new Emoji($name, $char, $keywords, $category);
-	$emoji->setUpdatedAt($updatedAt);
-	$manager = new EmojiManager();
-	try {
-		$result = $manager->update($id, $emoji);
-		if ($result) {
-			return json_encode([
-			  'status' => 200,
-			  'message' => 'Record modified'
-			]);
-		}
-		return json_encode([
-		  'status' => '500',
-		  'message' => 'An error occured while fulfilling request.'
-		]);
-	} catch (PDOException $e) {
-		return json_encode([
-		  'status' => 304,
-		  'message' => 'Unable to update record'
-		]);
-	}
+    $emoji = new Emoji($name, $char, $keywords, $category);
+    $emoji->setUpdatedAt($updatedAt);
+    $manager = new EmojiManager();
+    try {
+        $result = $manager->update($id, $emoji);
+        if ($result) {
+            return json_encode([
+              'status' => 200,
+              'message' => 'Record modified'
+            ]);
+        }
+        return json_encode([
+          'status' => '500',
+          'message' => 'An error occured while fulfilling request.'
+        ]);
+    } catch (PDOException $e) {
+        return json_encode([
+          'status' => 304,
+          'message' => 'Unable to update record'
+        ]);
+    }
 });
 
 
@@ -222,23 +236,23 @@ $app->patch('/emojis/:id', $authenticator, function ($id) use ($app) {
  */
 $app->delete('/emojis/:id', $authenticator, function ($id) {
 
-	$manager = new EmojiManager();
-	try {
-		$result = $manager->delete($id);
-		if ($result === true) {
-			echo json_encode([
-			  'statusCode ' => 200,
-			  'message' => 'Record deleted'
-			]);
-		} else {
-			echo json_encode([
-			  'statusCode' => 304,
-			  'message' => 'Record not found'
-			]);
-		}
-	} catch (PDOException $e) {
-		echo json_encode(['message' => $e->getMessage()]);
-	}
+    $manager = new EmojiManager();
+    try {
+        $result = $manager->delete($id);
+        if ($result === true) {
+            echo json_encode([
+              'status' => 200,
+              'message' => 'Record deleted'
+            ]);
+        } else {
+            echo json_encode([
+              'status' => 304,
+              'message' => 'Record not found'
+            ]);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['message' => $e->getMessage()]);
+    }
 });
 
 
