@@ -27,7 +27,7 @@ before_script:
   - composer install
   - mysql -e 'create database myapp_test;'
   - mysql -e 'use myapp_test'
-  - mysql -e 'insert into users (username, password, names) values("danverem", "password", "Verem Dugeri");'
+  - mysql -e 'insert into myapp_test.users (username, password, names) values("danverem", "password", "Verem Dugeri");'
 
 script:
    - bin/phpspec run --format=pretty
