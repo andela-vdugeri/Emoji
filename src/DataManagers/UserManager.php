@@ -40,11 +40,11 @@ class UserManager extends Connection implements Queryable
         $statement->bindParam(1, $id);
 
         //get the result
-        $result = $statement->execute();
-
+         $statement->execute();
+		 $result = $statement->fetchAll();
         //if result is not empty, return it
         if (! empty($result)) {
-            return $result;
+            return $result[0];
         }
 
         throw new RecordNotFoundException("The user does not exist in the database");
@@ -109,7 +109,7 @@ class UserManager extends Connection implements Queryable
         //if result is not empty return it, else throw an exception
 
         if (! empty($result)) {
-            return $result;
+            return $result[0];
         }
 
         throw new RecordNotFoundException('No Records found');
@@ -217,13 +217,13 @@ class UserManager extends Connection implements Queryable
 		//return true if a row is affected
 		if($statement->rowCount() > 0) {
 			return  $this->toJson([
-			    'statusCode' =>  200,
+			    'status' =>  200,
 				'message' 	 =>  'token expiry set'
 			]);
 		}
 
 		return $this->toJson([
-		  	'statusCode' => '304',
+		  	'status' => '304',
 			'message'	 => 'Unable to set token expiry date'
 		]);
 
@@ -255,14 +255,14 @@ class UserManager extends Connection implements Queryable
 		//check to see if the row was affected
 		if($statement->rowCount() > 0) {
 			return json_encode([
-			  'statusCode' 	=> 	200,
-			  'message'		=>  'row updated'
+			  'status' 	=> 	200,
+			  'message'		=>  'Session invalidated'
 			]);
 		}
 
 		return json_encode([
-			'statusCode' => 304,
-			'message'	 => 'No rows affected'
+			'status' => 304,
+			'message'	 => 'Unable to invalidate session'
 		]);
 
 	 }

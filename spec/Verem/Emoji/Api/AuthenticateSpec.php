@@ -2,15 +2,20 @@
 
 namespace spec\Verem\Emoji\Api;
 
-use PhpSpec\ObjectBehavior;
+use Mockery;
+use Prophecy\Prophet;
 use Prophecy\Argument;
+use PhpSpec\ObjectBehavior;
 use Verem\Emoji\Api\Authenticate;
 
 class AuthenticateSpec extends ObjectBehavior
 {
+	private $prophet;
+
 	public function  let(Authenticate $authenticate)
 	{
 		$this->beConstructedWith('danverem', 'password');
+		$this->prophet = new Prophet();
 	}
     function it_is_initializable()
     {
@@ -27,12 +32,14 @@ class AuthenticateSpec extends ObjectBehavior
 		$this->isValid('verem', 'password')->shouldReturn("{\"Error\":\"Invalid username or password\"}");
 	}
 
-//	public function it_should_login_a_user($auth)
-//	{
-//		$auth->beADoubleOf('Verem\Emoji\Api\Authenticate');
-//		$auth->login()->shouldBeCalled();
-//		$auth->login()->willReturn("{\"Expiry\":\"2015-10-10 22:16:22\",\"token\":\"45df5676234e\"}");
-//		$this->login()->shouldReturn("{\"Expiry\":\"2015-10-10 22:16:22\",\"token\":\"45df5676234e\"}");
-//	}
+
+	public function it_should_login_a_user()
+	{
+		$mock = Mockery::mock('Verem\Emoji\Api\AuthenticateStub');
+		$mock->shouldReceive('login')
+			->once()
+			->andReturn('{"expiry":"today:, "token":"token"');
+	}
+
 
 }

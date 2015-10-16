@@ -83,7 +83,7 @@ class EmojiManager extends Connection implements Queryable
 
         //if affected rows is more than one, return the result;
         if ($statement->rowCount() > 0) {
-            return json_encode($statement->fetchAll(PDO::FETCH_ASSOC));
+            return $statement->fetchAll(PDO::FETCH_ASSOC)[1];
         }
 
         throw new RecordNotFoundException("The record does not exist");
