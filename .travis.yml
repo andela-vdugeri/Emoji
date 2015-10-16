@@ -1,0 +1,30 @@
+language: php
+
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
+
+# This triggers builds to run on the new TravisCI infrastructure.
+# See: http://docs.travis-ci.com/user/workers/container-based-infrastructure/
+sudo: false
+
+matrix:
+  allow_failures:
+    - php: 7.0
+    - php: hhvm
+
+env:
+  - DB=mysql
+
+before_script:
+  - composer install
+
+script:
+   - bin/phpspec run --format=pretty
+   - ./vendor/bin/phpunit --testdox
+   - ./vendor/bin/behat --format=pretty --tags '~@php-version'`php php_version_tags.php`
+
+after_script:
+  - if [[ $TRAVIS_PHP_VERSION != 'hhvm' && $TRAVIS_PHP_VERSION != '7.0' ]]; then php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover; fi

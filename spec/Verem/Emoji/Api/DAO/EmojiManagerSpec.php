@@ -6,12 +6,15 @@ use Mockery;
 use Prophecy\Prophet;
 use Prophecy\Argument;
 use PhpSpec\ObjectBehavior;
+use Verem\Emoji\Api\DAO\EmojiManager;
+use Verem\Emoji\Api\Emoji;
 
 class EmojiManagerSpec extends ObjectBehavior
 {
 	private $prophet;
 	public function let()
 	{
+
 		$this->prophet = new Prophet();
 	}
     function it_is_initializable()
@@ -76,6 +79,11 @@ class EmojiManagerSpec extends ObjectBehavior
 
 	public function it_saves_an_emoji()
 	{
+
+		$emoji = new Emoji('test','test', 'test','test');
+
+		$this->save($emoji)
+			->shouldReturn(true);
 
 	}
 
