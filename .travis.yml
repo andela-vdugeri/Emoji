@@ -26,6 +26,7 @@ env:
 before_script:
   - composer install
   - mysql -e 'create database myapp_test;'
+  - mysql -e 'use myapp_test'
   - mysql -e 'insert into users (username, password, names) values("danverem", "password", "Verem Dugeri");'
 
 script:
