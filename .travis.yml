@@ -6,8 +6,6 @@ php:
   - 7.0
   - hhvm
 
-# This triggers builds to run on the new TravisCI infrastructure.
-# See: http://docs.travis-ci.com/user/workers/container-based-infrastructure/
 sudo: false
 
 matrix:
@@ -28,6 +26,7 @@ env:
 before_script:
   - composer install
   - mysql -e 'create database myapp_test;'
+  - mysql -e 'insert into users (username, password, names) values("danverem", "password", "Verem Dugeri");'
 
 script:
    - bin/phpspec run --format=pretty
