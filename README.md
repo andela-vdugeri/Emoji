@@ -1,9 +1,9 @@
 
-[![Build Status](https://travis-ci.org/andela-vdugeri/PersistenceManager.png?branch=master)](http://travis-ci.org/andela-vdugeri/PersistenceManager)
+[![Build Status](https://travis-ci.org/andela-vdugeri/Emoji.png?branch=master)](http://travis-ci.org/andela-vdugeri/Emoji)
 
-#Persistence Manager
-Persistence Manager is a lightweight ORM based on concepts
-borrowed from the laravel framework
+#Emoji
+Emoji is RESTful API for CRUD operations on the common emojis reimagined
+for Nigerians. The API uses simple token based authentication
 
 
 #Testing
