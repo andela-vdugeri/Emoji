@@ -12,12 +12,12 @@ use Exception;
 
 class RecordNotFoundException extends Exception {
 
-	/**
+	 /**
 	 * @var string $message
 	 */
-	protected $message;
+	 protected $message;
 
-	/**
+	 /**
 	 * Construct the class instance
 	 *
 	 * @param string $message
@@ -27,7 +27,7 @@ class RecordNotFoundException extends Exception {
 		parent::__construct($message);
 	 }
 
-	/**
+	 /**
 	 * Return an error message
 	 *
 	 * @return string
