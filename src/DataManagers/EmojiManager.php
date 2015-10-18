@@ -172,10 +172,10 @@ class EmojiManager extends Connection implements Queryable
 
         //bind params
         $statement->bindParam(1, $emoji->getName());
-         $statement->bindParam(2, $emoji->getChar());
-         $statement->bindParam(3, $emoji->getCategory());
-         $statement->bindParam(4, $emoji->getUpdatedAt());
-         $statement->bindParam(5, $id);
+	    $statement->bindParam(2, $emoji->getChar());
+	    $statement->bindParam(3, $emoji->getCategory());
+	    $statement->bindParam(4, $emoji->getUpdatedAt());
+	    $statement->bindParam(5, $id);
 
 
         //execute the statement
