@@ -54,23 +54,22 @@ $authenticator = function () use ($app) {
 
 $app->post('/auth/login', function () use ($app) {
 
-    $username = $app->request->params('username');
-    $password = $app->request->params('password');
+    $username 	= $app->request->params('username');
+    $password 	= $app->request->params('password');
 
-    $auth = new Authenticate($username, $password);
+    $auth 		= new Authenticate($username, $password);
 
-    $token = $auth->login();
+    $token 		= $auth->login();
 
-    $data = json_decode($token, true);
+    $data 		= json_decode($token, true);
 
-    $result = null;
+    $result 	= null;
     //if user token exists
     if (array_key_exists('token', $data)) {
 
         //update the user table
         $manager = new UserManager();
-
-        $result = $manager->updateToken(
+        $result  = $manager->updateToken(
           $data['expiry'], $data['token'], $username);
     }
 
@@ -84,12 +83,12 @@ $app->post('/auth/login', function () use ($app) {
  */
 $app->get('/auth/logout', $authenticator, function () use ($app) {
     //remove token from session
-    $token 		= $app->request->headers->get('Authorization');
+    $token 	 = $app->request->headers->get('Authorization');
     //remove token and expiry time from database
-    $manager 	= new UserManager();
+    $manager = new UserManager();
     $manager->invalidateSession($token);
     //set authorization headers to null;
-    $response 	= $app->response();
+    $response = $app->response();
     $response['Authorization'] = null;
 });
 
