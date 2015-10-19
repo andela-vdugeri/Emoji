@@ -226,9 +226,9 @@ class EmojiManager extends Connection implements Queryable
 	    $char		= $emoji->getChar();
 	    $keywords 	= $emoji->getKeywords();
 	    $category 	= $emoji->getCategory();
-	    $createdAt = $emoji->getCreatedAt();
-	    $updatedAt = $emoji->getUpdatedAt();
-	    $createdBy = $emoji->getCreatedBy();
+	    $createdAt  = $emoji->getCreatedAt();
+	    $updatedAt  = $emoji->getUpdatedAt();
+	    $createdBy  = $emoji->getCreatedBy();
 
         //bind params
 
