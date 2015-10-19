@@ -206,10 +206,12 @@ class EmojiManager extends Connection implements Queryable
         //prepare a statement
         $statement = $connection->prepare($sql);
 
+		//get the variables;
+		 $name = $emoji->getName();
 
         //bind params
 
-        $statement->bindParam(1, $emoji->getName());
+        $statement->bindParam(1, $name);
         $statement->bindParam(2, $emoji->getChar());
         $statement->bindParam(3, $emoji->getKeywords());
         $statement->bindParam(4, $emoji->getCategory());
