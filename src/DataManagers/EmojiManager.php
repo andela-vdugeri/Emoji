@@ -211,10 +211,10 @@ class EmojiManager extends Connection implements Queryable
 		 * PHP does not allow passing of objects by reference, sad
 		 * stuff.
 		 */
-		 $name = $emoji->getName();
-		 $char = $emoji->getChar();
-		 $keywords = $emoji->getKeywords();
-		 $category = $emoji->getCategory();
+		 $name 		= $emoji->getName();
+		 $char		= $emoji->getChar();
+		 $keywords 	= $emoji->getKeywords();
+		 $category 	= $emoji->getCategory();
 		 $createdAt = $emoji->getCreatedAt();
 		 $updatedAt = $emoji->getUpdatedAt();
 		 $createdBy = $emoji->getCreatedBy();
