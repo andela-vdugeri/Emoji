@@ -206,18 +206,28 @@ class EmojiManager extends Connection implements Queryable
         //prepare a statement
         $statement = $connection->prepare($sql);
 
-		//get the variables;
+		/*
+		 * I have to get the object properties here because, apparently
+		 * PHP does not allow passing of objects by reference, sad
+		 * stuff.
+		 */
 		 $name = $emoji->getName();
+		 $char = $emoji->getChar();
+		 $keywords = $emoji->getKeywords();
+		 $category = $emoji->getCategory();
+		 $createdAt = $emoji->getCreatedAt();
+		 $updatedAt = $emoji->getUpdatedAt();
+		 $createdBy = $emoji->getCreatedBy();
 
         //bind params
 
         $statement->bindParam(1, $name);
-        $statement->bindParam(2, $emoji->getChar());
-        $statement->bindParam(3, $emoji->getKeywords());
-        $statement->bindParam(4, $emoji->getCategory());
-        $statement->bindParam(5, $emoji->getCreatedAt());
-        $statement->bindParam(6, $emoji->getUpdatedAt());
-        $statement->bindParam(7, $emoji->getCreatedBy());
+        $statement->bindParam(2, $char);
+        $statement->bindParam(3, $keywords);
+        $statement->bindParam(4, $category);
+        $statement->bindParam(5, $createdAt);
+        $statement->bindParam(6, $updatedAt);
+        $statement->bindParam(7, $createdBy);
 
         //execute statement
         $statement->execute();
