@@ -79,7 +79,7 @@ class EmojiController
 
         $manager    = new EmojiManager();
         try {
-            $isSaved = $manager->save($emoji);
+            $isSaved = $manager->save(&$emoji);
             if ($isSaved) {
                 $response->body(json_encode([
                   'status'  => 201,
