@@ -105,59 +105,15 @@ $app->put('/emojis/:id', $authenticator, function ($id) use ($app) {
  * Do a partial update of an emoji
  */
 $app->patch('/emojis/:id', $authenticator, function ($id) use ($app) {
-
-    $name 		= $app->request->params('emojiName');
-    $char 		= $app->request->params('emojiChar');
-    $category 	= $app->request->params('category');
-    $updatedAt 	= $app->request->params('updatedAt');
-    $keywords 	= $app->request->params('keywords');
-
-    $emoji 		= new Emoji($name, $char, $keywords, $category);
-    $emoji->setUpdatedAt($updatedAt);
-    $manager 	= new EmojiManager();
-    try {
-        $result = $manager->update($id, $emoji);
-        if ($result) {
-            return json_encode([
-              'status' => 200,
-              'message' => 'Record modified'
-            ]);
-        }
-        return json_encode([
-          'status' => '500',
-          'message' => 'An error occured while fulfilling request.'
-        ]);
-    } catch (PDOException $e) {
-        return json_encode([
-          'status' => 304,
-          'message' => 'Unable to update record'
-        ]);
-    }
+	EmojiController::patch($app, $id);
 });
 
 
 /**
  * delete an emoji by the specified id
  */
-$app->delete('/emojis/:id', $authenticator, function ($id) {
-
-    $manager = new EmojiManager();
-    try {
-        $result = $manager->delete($id);
-        if ($result === true) {
-            echo json_encode([
-              'status'  => 200,
-              'message' => 'Record deleted'
-            ]);
-        } else {
-            echo json_encode([
-              'status'  => 304,
-              'message' => 'Record not found'
-            ]);
-        }
-    } catch (PDOException $e) {
-        echo json_encode(['message' => $e->getMessage()]);
-    }
+$app->delete('/emojis/:id', $authenticator, function ($id) use ($app) {
+	EmojiController::delete($app, $id);
 });
 
 
