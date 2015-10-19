@@ -10,7 +10,7 @@ require_once('vendor/autoload.php');
 
 use Slim\Slim;
 use Verem\Emoji\Api\Emoji;
-use Verem\Emoji\Api\Authenticate;
+use Verem\Emoji\Api\AuthController;
 use Verem\Emoji\Api\DAO\UserManager;
 use Verem\Emoji\Api\DAO\EmojiManager;
 use Verem\Emoji\Api\Exceptions\RecordNotFoundException;
@@ -61,29 +61,7 @@ $app->get('/', function(){
  */
 
 $app->post('/auth/login', function () use ($app) {
-
-    $username 	= $app->request->params('username');
-    $password 	= $app->request->params('password');
-
-    $auth 		= new Authenticate($username, $password);
-
-    $token 		= $auth->login();
-
-    $data 		= json_decode($token, true);
-
-    $result 	= null;
-    //if user token exists
-    if (array_key_exists('token', $data)) {
-
-        //update the user table
-        $manager = new UserManager();
-        $result  = $manager->updateToken(
-          $data['expiry'], $data['token'], $username);
-    }
-
-    if (json_decode($result, true)['status'] == 200) {
-        $app->response()->header('Authorization', $data['token']);
-    }
+	AuthController::login($app);
 });
 
 /**
