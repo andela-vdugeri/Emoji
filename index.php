@@ -35,7 +35,8 @@ $authenticator = function () use ($app) {
                   'status' => 401,
                   'message' => 'You have no authorization'
                 ]));
-
+				$response->status(401);
+				$app->stop();
 				return $response;
             }
 
@@ -47,6 +48,8 @@ $authenticator = function () use ($app) {
               'message' => 'You have no authorization'
             ]));
 
+			$response->status(401);
+			$app->stop();
 			return $response;
         }
     } else {
@@ -55,6 +58,8 @@ $authenticator = function () use ($app) {
           'message' => 'You have no authorization'
         ]));
 
+		$response->status(401);
+		$app->stop();
 		return $response;
     }
 };
