@@ -44,4 +44,27 @@ class AuthController
 
 		return $response;
     }
+
+	public static function logout(Slim $app)
+	{
+		$response = $app->response();
+
+		$response->header("Content-type", "application/json");
+
+		//remove token from session
+		$token 	 = $app->request->headers->get('Authorization');
+		//remove token and expiry time from database
+		$manager = new UserManager();
+		$manager->invalidateSession($token);
+		//set authorization headers to null;
+		$response = $app->response();
+		$response['Authorization'] = null;
+
+		$response->body(json_encode([
+			'status'  => 200,
+			'message' => 'token unset'
+		]));
+
+		return $response;
+	}
 }

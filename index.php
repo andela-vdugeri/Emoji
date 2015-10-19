@@ -68,14 +68,8 @@ $app->post('/auth/login', function () use ($app) {
  * Log out of the application
  */
 $app->get('/auth/logout', $authenticator, function () use ($app) {
-    //remove token from session
-    $token 	 = $app->request->headers->get('Authorization');
-    //remove token and expiry time from database
-    $manager = new UserManager();
-    $manager->invalidateSession($token);
-    //set authorization headers to null;
-    $response = $app->response();
-    $response['Authorization'] = null;
+
+	AuthController::logout($app);
 });
 
 /**
