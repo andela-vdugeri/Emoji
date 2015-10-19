@@ -198,6 +198,7 @@ class EmojiManager extends Connection implements Queryable
 	 */
      public function save(Emoji $emoji)
      {
+		 $anEmoji = $emoji;
         //construct a sql statement
         $sql = "INSERT INTO emojis (emojiname, emojichar, keywords, category, created_at, updated_at, created_by) VALUES(?,?,?,?,?,?,?)";
 
@@ -209,13 +210,13 @@ class EmojiManager extends Connection implements Queryable
 
         //bind params
 
-        $statement->bindParam(1, $emoji->getName());
-        $statement->bindParam(2, $emoji->getChar());
-        $statement->bindParam(3, $emoji->getKeywords());
-        $statement->bindParam(4, $emoji->getCategory());
-        $statement->bindParam(5, $emoji->getCreatedAt());
-        $statement->bindParam(6, $emoji->getUpdatedAt());
-        $statement->bindParam(7, $emoji->getCreatedBy());
+        $statement->bindParam(1, $anEmoji->getName());
+        $statement->bindParam(2, $anEmoji->getChar());
+        $statement->bindParam(3, $anEmoji->getKeywords());
+        $statement->bindParam(4, $anEmoji->getCategory());
+        $statement->bindParam(5, $anEmoji->getCreatedAt());
+        $statement->bindParam(6, $anEmoji->getUpdatedAt());
+        $statement->bindParam(7, $anEmoji->getCreatedBy());
 
         //execute statement
         $statement->execute();
