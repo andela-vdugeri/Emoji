@@ -70,7 +70,9 @@ class Connection extends EnvReader
      public function initConfigs()
      {
         //load the env file
-        $this->loadEnv();
+		 if (! getenv('APP_ENV')) {
+			 $this->loadEnv();
+		 }
 
         //read the environment variables
         $this->host        =    getenv('DB_HOST');
