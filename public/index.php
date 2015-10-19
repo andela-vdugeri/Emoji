@@ -84,12 +84,12 @@ $app->post('/auth/login', function () use ($app) {
  */
 $app->get('/auth/logout', $authenticator, function () use ($app) {
     //remove token from session
-    $token = $app->request->headers->get('Authorization');
+    $token 		= $app->request->headers->get('Authorization');
     //remove token and expiry time from database
-    $manager = new UserManager();
+    $manager 	= new UserManager();
     $manager->invalidateSession($token);
     //set authorization headers to null;
-    $response = $app->response();
+    $response 	= $app->response();
     $response['Authorization'] = null;
 });
 
@@ -97,8 +97,8 @@ $app->get('/auth/logout', $authenticator, function () use ($app) {
  * Fetch all emojis from the database
  */
 $app->get('/emojis', function () {
-    $manager = new EmojiManager();
-    $emojis = $manager->all();
+    $manager 	= new EmojiManager();
+    $emojis 	= $manager->all();
     return $manager->toJson($emojis);
 });
 
@@ -125,36 +125,36 @@ $app->get('/emojis/:id', function ($id) {
  */
 $app->post('/emojis', $authenticator, function () use ($app) {
 
-    $name = $app->request->params('emojiname');
-    $char = $app->request->params('emojichar');
-    $category = $app->request->params('category');
-    $createdBy = $app->request->params('created_by');
-    $createdAt = $app->request->params('created_at');
-    $updatedAt = $app->request->params('updated_at');
-    $keywords = $app->request->params('keywords');
+    $name 		= $app->request->params('emojiname');
+    $char 		= $app->request->params('emojichar');
+    $category 	= $app->request->params('category');
+    $createdBy 	= $app->request->params('created_by');
+    $createdAt 	= $app->request->params('created_at');
+    $updatedAt 	= $app->request->params('updated_at');
+    $keywords 	= $app->request->params('keywords');
 
-    $emoji = new Emoji($name, $char, $keywords, $category);
+    $emoji 		= new Emoji($name, $char, $keywords, $category);
 
     $emoji->setUpdatedAt($updatedAt);
     $emoji->setCreatedAt($createdAt);
     $emoji->setCreatedBy($createdBy);
 
-    $manager = new EmojiManager();
+    $manager 	= new EmojiManager();
     try {
         $isSaved = $manager->save($emoji);
         if ($isSaved) {
             return json_encode([
-                'status' => 201,
+                'status'  => 201,
                 'message' => 'Record created'
             ]);
         }
         return json_encode([
-            'status' => 500,
+            'status'  => 500,
             'message' => 'An error occurred while fulfilling request.'
         ]);
     } catch (PDOException $e) {
         return json_encode([
-            'status' => 500,
+            'status'  => 500,
             'message' => $e->getMessage()
         ]);
     }
@@ -167,30 +167,30 @@ $app->post('/emojis', $authenticator, function () use ($app) {
  */
 $app->put('/emojis/:id', $authenticator, function ($id) use ($app) {
 
-    $name = $app->request->params('emojiName');
-    $char = $app->request->params('emojiChar');
-    $category = $app->request->params('category');
-    $updatedAt = $app->request->params('updatedAt');
-    $keywords = $app->request->params('keywords');
+    $name 		= $app->request->params('emojiName');
+    $char	 	= $app->request->params('emojiChar');
+    $category 	= $app->request->params('category');
+    $updatedAt 	= $app->request->params('updatedAt');
+    $keywords 	= $app->request->params('keywords');
 
-    $emoji = new Emoji($name, $char, $keywords, $category);
+    $emoji 		= new Emoji($name, $char, $keywords, $category);
     $emoji->setUpdatedAt($updatedAt);
-    $manager = new EmojiManager();
+    $manager 	= new EmojiManager();
     try {
         $result = $manager->update($id, $emoji);
         if ($result) {
             return json_encode([
-              'status' => 200,
+              'status'  => 200,
               'message' => 'Record modified'
             ]);
         }
         return json_encode([
-          'status' => '500',
+          'status'  => '500',
           'message' => 'An error occured while fulfilling request.'
         ]);
     } catch (PDOException $e) {
         return json_encode([
-          'status' => 304,
+          'status'  => 304,
           'message' => 'Unable to update record'
         ]);
     }
@@ -201,15 +201,15 @@ $app->put('/emojis/:id', $authenticator, function ($id) use ($app) {
  */
 $app->patch('/emojis/:id', $authenticator, function ($id) use ($app) {
 
-    $name = $app->request->params('emojiName');
-    $char = $app->request->params('emojiChar');
-    $category = $app->request->params('category');
-    $updatedAt = $app->request->params('updatedAt');
-    $keywords = $app->request->params('keywords');
+    $name 		= $app->request->params('emojiName');
+    $char 		= $app->request->params('emojiChar');
+    $category 	= $app->request->params('category');
+    $updatedAt 	= $app->request->params('updatedAt');
+    $keywords 	= $app->request->params('keywords');
 
-    $emoji = new Emoji($name, $char, $keywords, $category);
+    $emoji 		= new Emoji($name, $char, $keywords, $category);
     $emoji->setUpdatedAt($updatedAt);
-    $manager = new EmojiManager();
+    $manager 	= new EmojiManager();
     try {
         $result = $manager->update($id, $emoji);
         if ($result) {
@@ -241,12 +241,12 @@ $app->delete('/emojis/:id', $authenticator, function ($id) {
         $result = $manager->delete($id);
         if ($result === true) {
             echo json_encode([
-              'status' => 200,
+              'status'  => 200,
               'message' => 'Record deleted'
             ]);
         } else {
             echo json_encode([
-              'status' => 304,
+              'status'  => 304,
               'message' => 'Record not found'
             ]);
         }
