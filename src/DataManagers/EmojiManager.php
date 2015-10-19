@@ -18,7 +18,7 @@ use Doctrine\Instantiator\Exception\InvalidArgumentException;
 
 class EmojiManager extends Connection implements Queryable
 {
-    /**
+     /**
      * find an emoji matching the specified id.
      *
      * @param $id
@@ -89,7 +89,7 @@ class EmojiManager extends Connection implements Queryable
         throw new RecordNotFoundException("The record does not exist");
      }
 
-     /**
+	 /**
      * Fetch all emojis from the database
      *
      * @return array
@@ -151,7 +151,7 @@ class EmojiManager extends Connection implements Queryable
          return new PDOException("Unable to delete record");
      }
 
-     /**
+	 /**
 	 * Update an emoji matching the specified id
 	 * with the object record
 	 *
@@ -170,11 +170,22 @@ class EmojiManager extends Connection implements Queryable
         //prepare a statement;
         $statement = $connection->prepare($sql);
 
+		 /*
+		 * I have to get the object properties here because, apparently
+		 * PDOStatement::bindParam() does not allow passing of objects by reference.
+		 * Can't believe this is happening.
+		 */
+
+		 $name 		= $emoji->getName();
+		 $char 		= $emoji->getChar();
+		 $category 	= $emoji->getCategory();
+		 $updatedAt = $emoji->getUpdatedAt();
+
         //bind params
-        $statement->bindParam(1, $emoji->getName());
-	    $statement->bindParam(2, $emoji->getChar());
-	    $statement->bindParam(3, $emoji->getCategory());
-	    $statement->bindParam(4, $emoji->getUpdatedAt());
+        $statement->bindParam(1, $name);
+	    $statement->bindParam(2, $char);
+	    $statement->bindParam(3, $category);
+	    $statement->bindParam(4, $updatedAt);
 	    $statement->bindParam(5, $id);
 
 
@@ -207,17 +218,17 @@ class EmojiManager extends Connection implements Queryable
         $statement = $connection->prepare($sql);
 
 		/*
-		 * I have to get the object properties here because, apparently
-		 * PHP does not allow passing of objects by reference, sad
-		 * stuff.
-		 */
-		 $name 		= $emoji->getName();
-		 $char		= $emoji->getChar();
-		 $keywords 	= $emoji->getKeywords();
-		 $category 	= $emoji->getCategory();
-		 $createdAt = $emoji->getCreatedAt();
-		 $updatedAt = $emoji->getUpdatedAt();
-		 $createdBy = $emoji->getCreatedBy();
+		* I have to get the object properties here because, apparently
+		* PDOStatement::bindParam() does not allow passing of objects by reference, sad
+		* stuff.
+		*/
+	    $name 		= $emoji->getName();
+	    $char		= $emoji->getChar();
+	    $keywords 	= $emoji->getKeywords();
+	    $category 	= $emoji->getCategory();
+	    $createdAt = $emoji->getCreatedAt();
+	    $updatedAt = $emoji->getUpdatedAt();
+	    $createdBy = $emoji->getCreatedBy();
 
         //bind params
 
