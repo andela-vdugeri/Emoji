@@ -156,10 +156,10 @@ class EmojiController
 		$response = $app->response();
 		$response->header("Content-type", "application/json");
 
-		$name 		= $app->request->params('emojiName');
-		$char 		= $app->request->params('emojiChar');
+		$name 		= $app->request->params('emojiname');
+		$char 		= $app->request->params('emojichar');
 		$category 	= $app->request->params('category');
-		$updatedAt 	= $app->request->params('updatedAt');
+		$updatedAt 	= $app->request->params('updatedat');
 		$keywords 	= $app->request->params('keywords');
 
 		$emoji 		= new Emoji($name, $char, $keywords, $category);
