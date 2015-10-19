@@ -91,76 +91,14 @@ $app->get('/emojis/:id', function ($id) use ($app) {
  * Create an emoji
  */
 $app->post('/emojis', $authenticator, function () use ($app) {
-
-    $name 		= $app->request->params('emojiname');
-    $char 		= $app->request->params('emojichar');
-    $category 	= $app->request->params('category');
-    $createdBy 	= $app->request->params('created_by');
-    $createdAt 	= $app->request->params('created_at');
-    $updatedAt 	= $app->request->params('updated_at');
-    $keywords 	= $app->request->params('keywords');
-
-    $emoji 		= new Emoji($name, $char, $keywords, $category);
-
-    $emoji->setUpdatedAt($updatedAt);
-    $emoji->setCreatedAt($createdAt);
-    $emoji->setCreatedBy($createdBy);
-
-    $manager 	= new EmojiManager();
-    try {
-        $isSaved = $manager->save($emoji);
-        if ($isSaved) {
-            return json_encode([
-                'status'  => 201,
-                'message' => 'Record created'
-            ]);
-        }
-        return json_encode([
-            'status'  => 500,
-            'message' => 'An error occurred while fulfilling request.'
-        ]);
-    } catch (PDOException $e) {
-        return json_encode([
-            'status'  => 500,
-            'message' => $e->getMessage()
-        ]);
-    }
-
-
+	EmojiController::save($app);
 });
 
 /**
  * Update an emoji matching the specified id
  */
 $app->put('/emojis/:id', $authenticator, function ($id) use ($app) {
-
-    $name 		= $app->request->params('emojiName');
-    $char	 	= $app->request->params('emojiChar');
-    $category 	= $app->request->params('category');
-    $updatedAt 	= $app->request->params('updatedAt');
-    $keywords 	= $app->request->params('keywords');
-
-    $emoji 		= new Emoji($name, $char, $keywords, $category);
-    $emoji->setUpdatedAt($updatedAt);
-    $manager 	= new EmojiManager();
-    try {
-        $result = $manager->update($id, $emoji);
-        if ($result) {
-            return json_encode([
-              'status'  => 200,
-              'message' => 'Record modified'
-            ]);
-        }
-        return json_encode([
-          'status'  => '500',
-          'message' => 'An error occured while fulfilling request.'
-        ]);
-    } catch (PDOException $e) {
-        return json_encode([
-          'status'  => 304,
-          'message' => 'Unable to update record'
-        ]);
-    }
+	EmojiController::update($app, $id);
 });
 
 /**
