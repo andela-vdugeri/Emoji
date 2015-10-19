@@ -66,13 +66,12 @@ class EmojiController
         $name        = $app->request->params('emojiname');
         $char        = $app->request->params('emojichar');
         $category    = $app->request->params('category');
-        $createdBy    = $app->request->params('created_by');
-        $createdAt    = $app->request->params('created_at');
-        $updatedAt    = $app->request->params('updated_at');
+        $createdBy   = $app->request->params('created_by');
+        $createdAt   = $app->request->params('created_at');
+        $updatedAt   = $app->request->params('updated_at');
         $keywords    = $app->request->params('keywords');
 
-
-        $emoji        = new Emoji($name, $char, $keywords, $category);
+        $emoji       = new Emoji($name, $char, $keywords, $category);
 
         $emoji->setUpdatedAt($updatedAt);
         $emoji->setCreatedAt($createdAt);
@@ -89,6 +88,7 @@ class EmojiController
 
 				return $response;
             }
+
             $response->body(json_encode([
               'status'  => 500,
               'message' => 'An error occurred while fulfilling request.'
@@ -130,6 +130,7 @@ class EmojiController
 
 				return $response;
 			}
+
 			$response->body(json_encode([
 			  'status'  => '500',
 			  'message' => 'An error occured while fulfilling request.'
@@ -174,12 +175,14 @@ class EmojiController
 
 				return $response;
 			}
+
 			$response->body(json_encode([
 			  'status' => '500',
 			  'message' => 'An error occured while fulfilling request.'
 			]));
 
 			return $response;
+
 		} catch (PDOException $e) {
 			$response->body(json_encode([
 			  'status' => 304,
@@ -214,6 +217,7 @@ class EmojiController
 
 				return $response;
 			}
+
 		} catch (PDOException $e) {
 			$response->body($manager->toJson([
 			  'status'  => 500,
