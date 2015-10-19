@@ -111,13 +111,15 @@ class EmojiController
 		$response = $app->response();
 		$response->header("Content-type", "application/json");
 
-		$name 		= $app->request->params('emojiName');
-		$char	 	= $app->request->params('emojiChar');
+		$name 		= $app->request->params('emojiname');
+		$char	 	= $app->request->params('emojichar');
 		$category 	= $app->request->params('category');
-		$updatedAt 	= $app->request->params('updatedAt');
+		$updatedAt 	= date('Y-m-d H:i:s');
 		$keywords 	= $app->request->params('keywords');
 
 		$emoji 		= new Emoji($name, $char, $keywords, $category);
+
+
 		$emoji->setUpdatedAt($updatedAt);
 		$manager 	= new EmojiManager();
 		try {
@@ -141,7 +143,7 @@ class EmojiController
 		} catch (PDOException $e) {
 			$response->body(json_encode([
 			  'status'  => 304,
-			  'message' => 'Unable to update record'
+			  'message' => $e->getMessage()
 			]));
 
 			return $response;
@@ -186,7 +188,7 @@ class EmojiController
 		} catch (PDOException $e) {
 			$response->body(json_encode([
 			  'status' => 304,
-			  'message' => 'Unable to update record'
+			  'message' => $e->getMessage()
 			]));
 
 			return $response;
