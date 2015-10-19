@@ -67,8 +67,8 @@ class EmojiController
         $char        = $app->request->params('emojichar');
         $category    = $app->request->params('category');
         $createdBy   = $app->request->params('created_by');
-        $createdAt   = $app->request->params('created_at');
-        $updatedAt   = $app->request->params('updated_at');
+        $createdAt   = date('Y-m-d H:i:s');
+        $updatedAt   = date('Y-m-d H:i:s');
         $keywords    = $app->request->params('keywords');
 
         $emoji       = new Emoji($name, $char, $keywords, $category);
