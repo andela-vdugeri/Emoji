@@ -18,6 +18,9 @@ $app = new Slim();
 
 //route middleware
 $authenticator = function () use ($app) {
+	$response = $app->response();
+	$response->header("Content-type", "application/json");
+
     //determine if the user has authorization.
     $authorization = $app->request->headers->get('Authorization');
 
@@ -27,23 +30,31 @@ $authenticator = function () use ($app) {
         try {
             $user = $manager->where('token', '=', $authorization);
             if ($user['token_expire'] < date('Y-m-d H:i:s')) {
-                return json_encode([
+                $response->body(json_encode([
                   'status' => 401,
                   'message' => 'You have no authorization'
-                ]);
+                ]));
+
+				return $response;
             }
+
             $app->response->header('Authorization', $authorization);
+
         } catch (RecordNotFoundException $e) {
-            return json_encode([
+            $response->body(json_encode([
               'status' => 401,
               'message' => 'You have no authorization'
-            ]);
+            ]));
+
+			return $response;
         }
     } else {
-        return json_encode([
+        $response->body(json_encode([
           'status' => 401,
           'message' => 'You have no authorization'
-        ]);
+        ]));
+
+		return $response;
     }
 };
 
