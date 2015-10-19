@@ -20,7 +20,7 @@ class EmojiController {
 
 	public static function findAll(Slim $app)
 	{
-		$response = $app->response();
+		$response   = $app->response();
 		$response->header("Content-type", "application/json");
 		$manager 	= new EmojiManager();
 		$emojis 	= $manager->all();
@@ -30,7 +30,7 @@ class EmojiController {
 			return $response;
 		} catch(RecordNotFoundException $e) {
 			$result= $manager->toJson([
-			  "status" => 500,
+			  "status"  => 500,
 			  "message" => $e->getErrorMessage()]);
 			$response->body($result);
 
