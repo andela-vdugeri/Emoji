@@ -11,6 +11,7 @@ namespace Verem\Emoji\Api;
 
 use Slim\Slim;
 use Verem\Emoji\Api\DAO\EmojiManager;
+use Verem\Emoji\Api\Exceptions\RecordNotFoundException;
 
 class EmojiController {
 
@@ -23,10 +24,19 @@ class EmojiController {
 		$response->header("Content-type", "application/json");
 		$manager 	= new EmojiManager();
 		$emojis 	= $manager->all();
-		$result = $manager->toJson($emojis);
-		$response->body($result);
+		try{
+			$result = $manager->toJson($emojis);
+			$response->body($result);
+			return $response;
+		} catch(RecordNotFoundException $e) {
+			$result= $manager->toJson([
+			  "status" => 500,
+			  "message" => $e->getErrorMessage()]);
+			$response->body($result);
 
-		return $response;
+			return $response;
+		}
+
 	}
 
 
