@@ -15,6 +15,7 @@ use Verem\Emoji\Api\DAO\UserManager;
 use Verem\Emoji\Api\Exceptions\RecordNotFoundException;
 
 $app = new Slim();
+$app->config('debug', 'false');
 
 //route middleware
 $authenticator = function () use ($app) {
