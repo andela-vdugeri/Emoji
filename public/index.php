@@ -48,6 +48,14 @@ $authenticator = function () use ($app) {
     }
 };
 
+
+/**
+ * Homepage route
+ */
+
+$app->get('/', function(){
+	echo "<h2>Welcome to the naija emoji RESTful api</h2>";
+});
 /**
  * The login route for the post method
  */
