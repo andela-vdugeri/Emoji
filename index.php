@@ -68,7 +68,6 @@ $app->post('/auth/login', function () use ($app) {
  * Log out of the application
  */
 $app->get('/auth/logout', $authenticator, function () use ($app) {
-
 	AuthController::logout($app);
 });
 
