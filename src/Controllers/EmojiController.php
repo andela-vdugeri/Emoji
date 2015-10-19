@@ -23,15 +23,18 @@ class EmojiController {
 		$response   = $app->response();
 		$response->header("Content-type", "application/json");
 		$manager 	= new EmojiManager();
-		$emojis 	= $manager->all();
+
 		try{
+			$emojis = $manager->all();
 			$result = $manager->toJson($emojis);
 			$response->body($result);
 			return $response;
 		} catch(RecordNotFoundException $e) {
 			$result= $manager->toJson([
 			  "status"  => 500,
-			  "message" => $e->getErrorMessage()]);
+			  "message" => $e->getErrorMessage()
+			]);
+
 			$response->body($result);
 
 			return $response;
