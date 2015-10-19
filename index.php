@@ -9,11 +9,9 @@
 require_once('vendor/autoload.php');
 
 use Slim\Slim;
-use Verem\Emoji\Api\Emoji;
 use Verem\Emoji\Api\AuthController;
 use Verem\Emoji\Api\EmojiController;
 use Verem\Emoji\Api\DAO\UserManager;
-use Verem\Emoji\Api\DAO\EmojiManager;
 use Verem\Emoji\Api\Exceptions\RecordNotFoundException;
 
 $app = new Slim();
