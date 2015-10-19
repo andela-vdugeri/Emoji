@@ -77,25 +77,14 @@ $app->get('/auth/logout', $authenticator, function () use ($app) {
  */
 $app->get('/emojis', function () use ($app) {
 	EmojiController::findAll($app);
-
 });
 
 /**
  * Get an emoji from the database matching the
  * particular id
  */
-$app->get('/emojis/:id', function ($id) {
-    $manager = new EmojiManager();
-    try {
-        $emoji = $manager->find($id);
-    } catch (RecordNotFoundException $e) {
-		return $manager->toJson([
-			'status' => 204,
-			'message' => 'No record found'
-		]);
-    }
-
-    echo $manager->toJson($emoji);
+$app->get('/emojis/:id', function ($id) use ($app) {
+	EmojiController::find($id, $app);
 });
 
 /**

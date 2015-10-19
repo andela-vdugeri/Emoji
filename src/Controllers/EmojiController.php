@@ -42,5 +42,25 @@ class EmojiController {
 
 	}
 
+	public static function find($id, Slim $app)
+	{
+		$response = $app->response();
+		$response->header("Content-type", "application/json");
+
+		$manager = new EmojiManager();
+		try {
+			$emoji = $manager->find($id);
+			$response->body($manager->toJson($emoji));
+			return $response;
+		} catch (RecordNotFoundException $e) {
+			$response->body($manager->toJson([
+			  'status' => 204,
+			  'message' => 'No record found'
+			]));
+
+			return $response;
+		}
+	}
+
 
 }
