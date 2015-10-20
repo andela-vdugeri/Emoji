@@ -217,13 +217,13 @@ class UserManager extends Connection implements Queryable
 		//return true if a row is affected
 		if($statement->rowCount() > 0) {
 			return  $this->toJson([
-			    'status' =>  200,
-				'message' 	 =>  'token expiry set'
+				'status'  =>   200,
+				'token'	  =>   $token,
+				'message' =>   'token expiry set'
 			]);
 		}
 
 		return $this->toJson([
-		  	'status' => '304',
 			'message'	 => 'Unable to set token expiry date'
 		]);
 
