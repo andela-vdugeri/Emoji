@@ -23,7 +23,7 @@
             }
             </code></pre>
             The response to the following request includes the message,
-            the response code and the some other data.
+            the response status code and some other data.
 
             On successful registration, the following json response will be returned
 
@@ -31,6 +31,7 @@
             <code class="php">
                 Response body:
                 {
+                'status'    :  200
                 'username'  : 'johndoe',
                 'password'  : 'someEncryptedString',
                 'message'   : 'Registration succesful'
