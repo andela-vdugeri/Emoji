@@ -15,7 +15,7 @@ use Verem\Emoji\Api\DAO\UserManager;
 use Verem\Emoji\Api\Exceptions\RecordNotFoundException;
 
 $app = new Slim([
-	'templates.path' => '/templates',
+	'templates.path' => 'templates/',
 	'debug'			 => false
 ]);
 
@@ -23,7 +23,7 @@ $app = new Slim([
 $app->view(new \Slim\Views\Twig());
 $app->view->parserOptions = array(
   'charset' => 'utf-8',
-  'cache' => realpath('../templates/cache'),
+  'cache' => realpath('templates/cache'),
   'auto_reload' => true,
   'strict_variables' => false,
   'autoescape' => true
