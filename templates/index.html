@@ -103,6 +103,112 @@
             </pre>
         </span>
 
+        <span>
+            TO save an Emoji, a POST request has to be made to <pre><code class="html">https://naijaemoji.herokuapp.com/emojis</code></pre>
+            Like so:
+            <pre>
+                <code class="php">
+                    POST https://naijaemoji.herokuapp.com/emojis
+
+                    Request Body:
+                    {
+                        'emojiname' : 'someName',
+                        'emojichar' : 'someUTF-8String',
+                        'category'  : 'someCategory',
+                        'keywords'  : 'someKeywords',
+                        'created_by': 'userId'
+                    }
+                </code>
+            </pre>
+            <pre><code class="php"> Note that the 'Authorization' header should contain the token</code></pre>
+            The response received from that request will be of this form
+
+            <pre>
+                <code class="php">
+                    Response Body:
+                    {
+                        'status'  : 201,
+                        'message' : 'Record created'
+                    }
+                </code>
+            </pre>
+        </span>
+
+        <span>
+            To get all emojis, a GET request should be sent to
+            <pre><code class="php">https://naijaemoji.herokuapp.com/emojis</code></pre>
+            This route is not protected and does not need an authorization header.
+
+            Example:
+            <pre>
+                <code class="php">
+                    GET https://naijaemoji.herokuapp.com/emojis
+                </code>
+            </pre>
+
+
+            <pre>
+                <code class="php">
+                    Response Body:
+
+                    [
+                        {
+                            'emojiname' : 'smiley',
+                            'emojichar' : 'SomeEmoji',
+                            'category'  : 'emoticons',
+                            'keywords'  : 'smile, face',
+                            'created_by' : 234,
+                        },
+
+                        {
+                        'emojiname' : 'dancer',
+                        'emojichar' : 'SomeEmoji',
+                        'category'  : 'people',
+                        'keywords'  : 'girl, dance',
+                        'created_by :  12,
+                        }
+                    ]
+                </code>
+            </pre>
+        </span>
+
+        <span>
+            To edit an emoji send a  PUT request to
+            <pre>
+                <code class="php">
+                    https://naijaemoji.herokuapp.com/emojis/{id}
+                </code>
+            </pre>
+
+            Example:
+            <pre>
+                <code class="php">
+                    PUT https://naijaemoji.herokuapp.com/emojis/1
+
+                    Request Body
+                    {
+                        'id'        : 1,
+                        'emojiname' : 'someName',
+                        'emojichar' : 'someUTF-8String',
+                        'categories': 'someCategory',
+                        'keywords'  : 'someKeywords'
+                    }
+                </code>
+            </pre>
+            All arguments, except the id, are optional.
+
+
+            Response Body:
+            <pre>
+                <code class="php">
+                    {
+                        'status'  :  200,
+                        'message' : 'Record modified'
+                    }
+                </code>
+            </pre>
+        </span>
+
     </div>
 </body>
 </html>
