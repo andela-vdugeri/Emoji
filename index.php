@@ -14,8 +14,21 @@ use Verem\Emoji\Api\EmojiController;
 use Verem\Emoji\Api\DAO\UserManager;
 use Verem\Emoji\Api\Exceptions\RecordNotFoundException;
 
-$app = new Slim();
-$app->config('debug', 'false');
+$app = new Slim([
+	'templates.path' => '/templates',
+	'debug'			 => false
+]);
+
+// Prepare view
+$app->view(new \Slim\Views\Twig());
+$app->view->parserOptions = array(
+  'charset' => 'utf-8',
+  'cache' => realpath('../templates/cache'),
+  'auto_reload' => true,
+  'strict_variables' => false,
+  'autoescape' => true
+);
+$app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
 
 //route middleware
 $authenticator = function () use ($app) {
@@ -25,7 +38,7 @@ $authenticator = function () use ($app) {
     //determine if the user has authorization.
     $authorization = $app->request->headers->get('Authorization');
 
-    if (!is_null($authorization)) {
+    if (! is_null($authorization)) {
         //check token expiry
         $manager = new UserManager();
         try {
@@ -69,8 +82,8 @@ $authenticator = function () use ($app) {
  * Homepage route
  */
 
-$app->get('/', function(){
-	echo "<h2>Welcome to the naija emoji RESTful api</h2>";
+$app->get('/', function() use ($app) {
+	$app->render('index.html');
 });
 /**
  * The login route for the post method

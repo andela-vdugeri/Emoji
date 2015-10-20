@@ -27,7 +27,9 @@
   },
   "require": {
     "vlucas/phpdotenv": "^2.0",
-    "slim/slim": "^2.6"
+    "slim/slim": "^2.6",
+    "slim/views": "0.*",
+    "twig/twig": "1.*"
   },
   "require-dev": {
     "phpspec/phpspec" : "~2.0",
