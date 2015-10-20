@@ -1,10 +1,43 @@
 <html>
     <head>
         <title>Emoji Api</title>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/default.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/css/materialize.min.css">
+
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/js/materialize.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
     </head>
 <body>
-    <div>
-        <h2>Welcome to Naija Emoji</h2>
+    <div class="container">
+        <h2>Usage</h2>
+        Example POST request to the register route
+        <pre><code class="php">
+            POST https://naijaemoji.herokuapp.com/register
+            Request body:
+            {
+                'username' : 'johndoe',
+                'password' : 'password'
+            }
+            </code></pre>
+            The response the to the following request includes the message,
+            the response code and the some other data.
+
+            On succesful registration, the following json reponse will be returned
+
+        <pre>
+            <code class="php">
+                Response body:
+                {
+                'username'  : 'johndoe',
+                'password'  : 'someEncryptedString',
+                'message'   : 'Registration succesful'
+                }
+            </code>
+        </pre>
+
     </div>
 </body>
 </html>
