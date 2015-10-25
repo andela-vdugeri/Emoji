@@ -78,15 +78,53 @@ class AuthController
 		return $response;
 	 }
 
+
+	public function registerUser(Slim $app)
+	{
+		$response = $this->getResponse($app);
+
+		$username = $app->request->params('username');
+		$password = $app->request->params('password');
+		$names 	  = $app->request->params('names');
+
+		$user = new User($username, $password, $names);
+
+		//get token
+		$auth  = new Authenticate($username, $password);
+		$tokenResponse = $auth->getToken();
+		$token = $this->jsonDecode($tokenResponse)['token'];
+
+		$tokenExpire = $this->jsonDecode($tokenResponse)['expiry'];
+
+		//set user token and expiry
+		$user->setToken($token);
+		$user->setTokenExpire($tokenExpire);
+
+		$manager = new UserManager();
+
+		$manager->save($user);
+
+		$token =  $auth->login();
+
+		$response->body($token);
+
+		return $response;
+	}
+
 	 /**
 	 * @param $app
 	 * @return mixed
 	 */
-	 private function getResponse($app)
+	 private function getResponse(Slim $app)
 	 {
 		$response = $app->response();
 		$response->header("Content-type", "application/json");
 
 		return $response;
 	 }
+
+	private function jsonDecode($response)
+	{
+		return json_decode($response, true);
+	}
 }

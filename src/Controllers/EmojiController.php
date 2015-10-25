@@ -263,7 +263,7 @@ class EmojiController
 	 * @param $app
 	 * @return mixed
 	 */
-	private function getContentType($app)
+	private function getContentType(Slim $app)
 	{
 		$response   = $app->response();
 		$response->header("Content-type", "application/json");

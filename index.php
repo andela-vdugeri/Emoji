@@ -77,6 +77,10 @@ $authenticator = function () use ($app) {
     }
 };
 
+$app->post('/register', function() use ($app){
+	$auth = new AuthController();
+	$auth->registerUser($app);
+});
 
 /**
  * Homepage route
