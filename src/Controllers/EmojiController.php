@@ -33,12 +33,12 @@ class EmojiController
             return $response;
 
         } catch (RecordNotFoundException $e) {
-            $result= $manager->toJson([
+            $error= $manager->toJson([
               "status"  => 500,
               "message" => $e->getErrorMessage()
             ]);
 
-            $response->body($result);
+            $response->body($error);
 
             return $response;
         }
