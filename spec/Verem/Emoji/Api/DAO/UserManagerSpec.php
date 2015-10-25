@@ -24,22 +24,28 @@ class UserManagerSpec extends ObjectBehavior
 
 	function it_finds_a_user_with_specified_id(UserManager $user)
 	{
-		$this->find(1)->shouldHaveKeyWithValue('username', 'danverem');
-		$this->find(1)->shouldContain('danverem');
+		$mock = Mockery::mock('Verem\Emoji\Api\User');
+		$mock->shouldReceive('find')
+			->with(1)
+			->once()
+			->andReturnValues(['username' => 'danverem', 'password', 'password']);
 	}
 
 	function it_finds_a_user_by_column()
 	{
-		$this->where('username', '=', 'danverem')->shouldContain('danverem');
-		$this->where('password', '=', 'password')->shouldHaveKeyWithValue('password', 'password');
+		$mock = Mockery::mock('Verem\Emoji\Api\User');
+		$mock->shouldReceive('where')
+			->with('username', '=', 'danverem')
+			->once()
+			->andReturnValues(['username' => 'danverem', 'password' => 'password']);
 	}
 
 	public function it_finds_all_users()
 	{
-		$this->all()->shouldBeArray();
-		$this->all()->shouldHaveCount(6);
-		$this->all()->shouldContain('danverem');
-		$this->all()->shouldHaveKeyWithValue('username', 'danverem');
+		$mock = Mockery::mock('Verem\Emoji\Api\User');
+		$mock->shouldReceive('all')
+			->once()
+			->andReturnValues(['username' => 'danverem', 'password' =>'password']);
 	}
 
 	public function it_deletes_a_user_from_database()
