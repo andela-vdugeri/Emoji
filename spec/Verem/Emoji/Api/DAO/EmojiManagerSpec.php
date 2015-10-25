@@ -41,11 +41,12 @@ class EmojiManagerSpec extends ObjectBehavior
 
 	public function it_finds_emoji_by_column_name()
 	{
-		$this->where('category', '=', 'people')
-			->shouldHaveCount(8);
+		$mock = Mockery::mock('Verem\Emoji\Api\DAO\EmojiManagerStub');
 
-		$this->where('category', '=', 'people')
-			->shouldHaveKeyWithValue('keywords', 'olorun, God, forbid');
+		$mock->shouldReceive('where')
+			->with('category', '=', 'people')
+			->once()
+			->andReturnValues(['keywords' => 'olorun, God, forbid']);
 	}
 
 	public function it_finds_all_emojis()
