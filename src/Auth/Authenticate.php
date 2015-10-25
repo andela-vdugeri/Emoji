@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: andela
+ * @author : Verem Dugeri
  * Date: 10/7/15
  * Time: 4:08 PM
  */
@@ -13,7 +13,7 @@ use Verem\Emoji\Api\Exceptions\RecordNotFoundException;
 
 class Authenticate
 {
-	/**
+	 /**
 	 * @var string $username
 	 */
 	 private $username;
@@ -23,7 +23,7 @@ class Authenticate
 	 */
 	 private $password;
 
-	/**
+	 /**
 	 * Construct the object instance
 	 *
 	 * @param $username

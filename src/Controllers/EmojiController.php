@@ -121,8 +121,13 @@ class EmojiController
         }
      }
 
-	public static function update(Slim $app, $id)
-	{
+	 /**
+	 * @param Slim $app
+	 * @param $id
+	 * @return mixed
+	 */
+	 public static function update(Slim $app, $id)
+	 {
 		$response 	= static::getContentType($app);
 
 		$name 		= $app->request->params('emojiname');
@@ -162,11 +167,16 @@ class EmojiController
 
 			return $response;
 		}
-	}
+	 }
 
 
-	public static function patch(Slim $app, $id)
-	{
+	 /**
+	 * @param Slim $app
+	 * @param $id
+	 * @return mixed
+	 */
+	 public static function patch(Slim $app, $id)
+	 {
 		$response 	= static::getContentType($app);
 
 		$name 		= $app->request->params('emojiname');
@@ -207,10 +217,15 @@ class EmojiController
 
 			return $response;
 		}
-	}
+	 }
 
-	public static function delete(Slim $app, $id)
-	{
+	 /**
+	 * @param Slim $app
+	 * @param $id
+	 * @return mixed
+	 */
+	 public static function delete(Slim $app, $id)
+	 {
 		$response 	=  static::getContentType($app);
 
 		$manager 	= new EmojiManager();
@@ -242,8 +257,12 @@ class EmojiController
 
 			return $response;
 		}
-	}
+	 }
 
+	/**
+	 * @param $app
+	 * @return mixed
+	 */
 	private function getContentType($app)
 	{
 		$response   = $app->response();

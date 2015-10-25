@@ -2,9 +2,9 @@
 
 namespace spec\Verem\Emoji\Api;
 
-use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Verem\Emoji\Api\Emoji;
+use PhpSpec\ObjectBehavior;
 
 class EmojiSpec extends ObjectBehavior
 {
@@ -23,7 +23,6 @@ class EmojiSpec extends ObjectBehavior
 		$this->setUpdatedAt('2015-10-10 22:14:22');
 		$this->getUpdatedAt()->shouldReturn('2015-10-10 22:14:22');
 		$this->getUpdatedAt()->shouldNotBeEqualTo(date('Y-m-d H:i:s'));
-
 	}
 
 	public function it_sets_created_at()
@@ -58,6 +57,5 @@ class EmojiSpec extends ObjectBehavior
 	public function it_gets_emoji_character()
 	{
 		$this->getChar()->shouldReturn('9u74ED3');
-
 	}
 }

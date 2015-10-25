@@ -13,8 +13,12 @@ use Verem\Emoji\Api\DAO\UserManager;
 
 class AuthController
 {
-    public static function login(Slim $app)
-    {
+	 /**
+	 * @param Slim $app
+	 * @return mixed
+	 */
+     public static function login(Slim $app)
+     {
 
 		$response = static::getResponse($app);
 
@@ -44,10 +48,14 @@ class AuthController
         }
 
 		return $response;
-    }
+     }
 
-	public static function logout(Slim $app)
-	{
+	 /**
+	 * @param Slim $app
+	 * @return mixed
+	 */
+	 public static function logout(Slim $app)
+	 {
 		$response = static::getResponse($app);
 
 		//remove token from session
@@ -68,13 +76,17 @@ class AuthController
 		]));
 
 		return $response;
-	}
+	 }
 
-	private function getResponse($app)
-	{
+	 /**
+	 * @param $app
+	 * @return mixed
+	 */
+	 private function getResponse($app)
+	 {
 		$response = $app->response();
 		$response->header("Content-type", "application/json");
 
 		return $response;
-	}
+	 }
 }
