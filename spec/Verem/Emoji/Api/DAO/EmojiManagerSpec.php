@@ -81,12 +81,13 @@ class EmojiManagerSpec extends ObjectBehavior
 
 	public function it_saves_an_emoji()
 	{
-
 		$emoji = new Emoji('test','test', 'test','test');
 
-		$this->save($emoji)
-			->shouldReturn(true);
-
+		$mock = Mockery::mock('Verem\Emoji\Api\DAO\EmojiManagerStub');
+		$mock->shouldReceive('save')
+			->with($emoji)
+			->once()
+			->andReturn(true);
 	}
 
 
