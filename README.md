@@ -17,6 +17,8 @@ for Nigerians. The API uses simple token based authentication
 `````````
 
 #usage
+The documentation of this API is found at [the official website](https://naijaemoji.herokuapp.com). Please refer
+to it for more information.
 
 
 

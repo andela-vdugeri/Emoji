@@ -15,19 +15,20 @@ class AuthController
 {
     public static function login(Slim $app)
     {
-		$response = $app->response();
-		$response->header("Content-type", "application/json");
 
-        $username    = $app->request->params('username');
-        $password    = $app->request->params('password');
+		$response = static::getResponse($app);
 
-        $auth        = new Authenticate($username, $password);
+        $username   = $app->request->params('username');
+        $password   = $app->request->params('password');
 
-        $token        = $auth->login();
+        $auth       = new Authenticate($username, $password);
 
-        $data        = json_decode($token, true);
+        $token      = $auth->login();
 
-        $result    = null;
+        $data       = json_decode($token, true);
+
+        $result     = null;
+
         //if user token exists
         if (array_key_exists('token', $data)) {
 
@@ -47,23 +48,32 @@ class AuthController
 
 	public static function logout(Slim $app)
 	{
-		$response = $app->response();
-
-		$response->header("Content-type", "application/json");
+		$response = static::getResponse($app);
 
 		//remove token from session
 		$token 	 = $app->request->headers->get('Authorization');
+
 		//remove token and expiry time from database
 		$manager = new UserManager();
+
 		$manager->invalidateSession($token);
+
 		//set authorization headers to null;
-		$response = $app->response();
+
 		$response['Authorization'] = null;
 
 		$response->body(json_encode([
 			'status'  => 200,
 			'message' => 'token unset'
 		]));
+
+		return $response;
+	}
+
+	private function getResponse($app)
+	{
+		$response = $app->response();
+		$response->header("Content-type", "application/json");
 
 		return $response;
 	}

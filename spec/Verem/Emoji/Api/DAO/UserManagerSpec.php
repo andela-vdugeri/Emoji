@@ -11,10 +11,12 @@ use Verem\Emoji\Api\User;
 class UserManagerSpec extends ObjectBehavior
 {
 	private  $user;
+
 	public function let()
 	{
 		$this->user = new User('Dan','Verem','Verem Dugeri');
 	}
+
     function it_is_initializable()
     {
         $this->shouldHaveType('Verem\Emoji\Api\DAO\UserManager');

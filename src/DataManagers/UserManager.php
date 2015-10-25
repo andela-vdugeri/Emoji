@@ -70,11 +70,9 @@ class UserManager extends Connection implements Queryable
         $statement = $connection->prepare($sql);
 
         //bind params
-
         $statement->bindParam(1, $value);
 
         //execute query;
-
         $statement->execute();
 
 		$result = $statement->fetch(PDO::FETCH_ASSOC);

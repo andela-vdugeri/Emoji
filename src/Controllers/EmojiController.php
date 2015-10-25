@@ -15,17 +15,23 @@ use Verem\Emoji\Api\Exceptions\RecordNotFoundException;
 
 class EmojiController
 {
-    public static function findAll(Slim $app)
-    {
-        $response   = $app->response();
-        $response->header("Content-type", "application/json");
+	 /**
+	 * @param Slim $app
+	 * @return mixed
+	 */
+     public static function findAll(Slim $app)
+     {
+		$response 	= static::getContentType($app);
+
         $manager    = new EmojiManager();
 
         try {
             $emojis = $manager->all();
             $result = $manager->toJson($emojis);
             $response->body($result);
+
             return $response;
+
         } catch (RecordNotFoundException $e) {
             $result= $manager->toJson([
               "status"  => 500,
@@ -36,18 +42,24 @@ class EmojiController
 
             return $response;
         }
-    }
+     }
 
-    public static function find($id, Slim $app)
-    {
-        $response = $app->response();
-        $response->header("Content-type", "application/json");
+	 /**
+	 * @param $id
+	 * @param Slim $app
+	 * @return mixed
+	 */
+     public static function find($id, Slim $app)
+     {
+        $response = static::getContentType($app);
 
         $manager  = new EmojiManager();
         try {
             $emoji = $manager->find($id);
             $response->body($manager->toJson($emoji));
+
             return $response;
+
         } catch (RecordNotFoundException $e) {
             $response->body($manager->toJson([
               'status' => 204,
@@ -56,12 +68,15 @@ class EmojiController
 
             return $response;
         }
-    }
+     }
 
-    public static function save(Slim $app)
-    {
-		$response  = $app->response();
-		$response->header("Content-type", "application/json");
+	 /**
+	 * @param Slim $app
+	 * @return \Slim\Http\Response
+	 */
+     public static function save(Slim $app)
+     {
+		$response  	= static::getContentType($app);
 
         $name        = $app->request->params('emojiname');
         $char        = $app->request->params('emojichar');
@@ -104,12 +119,11 @@ class EmojiController
 
 			return $response;
         }
-    }
+     }
 
 	public static function update(Slim $app, $id)
 	{
-		$response = $app->response();
-		$response->header("Content-type", "application/json");
+		$response 	= static::getContentType($app);
 
 		$name 		= $app->request->params('emojiname');
 		$char	 	= $app->request->params('emojichar');
@@ -153,8 +167,7 @@ class EmojiController
 
 	public static function patch(Slim $app, $id)
 	{
-		$response = $app->response();
-		$response->header("Content-type", "application/json");
+		$response 	= static::getContentType($app);
 
 		$name 		= $app->request->params('emojiname');
 		$char 		= $app->request->params('emojichar');
@@ -167,6 +180,7 @@ class EmojiController
 		$emoji->setUpdatedAt($updatedAt);
 
 		$manager 	= new EmojiManager();
+
 		try {
 			$result = $manager->update($id, $emoji);
 			if ($result) {
@@ -197,10 +211,10 @@ class EmojiController
 
 	public static function delete(Slim $app, $id)
 	{
-		$response = $app->response();
-		$response->header("Content-type", "application/json");
+		$response 	=  static::getContentType($app);
 
-		$manager = new EmojiManager();
+		$manager 	= new EmojiManager();
+
 		try {
 			$result = $manager->delete($id);
 			if ($result === true) {
@@ -228,5 +242,13 @@ class EmojiController
 
 			return $response;
 		}
+	}
+
+	private function getContentType($app)
+	{
+		$response   = $app->response();
+		$response->header("Content-type", "application/json");
+
+		return $response;
 	}
 }

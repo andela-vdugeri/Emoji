@@ -17,6 +17,7 @@ class AuthenticateSpec extends ObjectBehavior
 		$this->beConstructedWith('danverem', 'password');
 		$this->prophet = new Prophet();
 	}
+
     function it_is_initializable()
     {
         $this->shouldHaveType('Verem\Emoji\Api\Authenticate');

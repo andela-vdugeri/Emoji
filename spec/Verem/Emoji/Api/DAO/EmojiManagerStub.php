@@ -25,6 +25,7 @@ class EmojiManagerStub extends EmojiManager
 		  'updated_at'=> '2015-10-15 12:22:45'
 		];
 	}
+
 	public function all()
 	{
 		return [

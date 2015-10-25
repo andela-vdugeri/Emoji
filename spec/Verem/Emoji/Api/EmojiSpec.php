@@ -10,8 +10,9 @@ class EmojiSpec extends ObjectBehavior
 {
 	function let(Emoji $emoji)
 	{
-		$this->beConstructedWith('Girlie','9u74ED3', 'hello, there','people'); //$name, $char, $keywords, $category
+		$this->beConstructedWith('Girlie','9u74ED3', 'hello, there','people');
 	}
+
     function it_is_initializable()
     {
         $this->shouldHaveType('Verem\Emoji\Api\Emoji');

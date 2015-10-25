@@ -74,11 +74,9 @@ class EmojiManager extends Connection implements Queryable
         $statement = $connection->prepare($sql);
 
         //bind params
-
         $statement->bindParam(1, $value);
 
         //execute query;
-
         $statement->execute();
 
         //if affected rows is more than one, return the result;
@@ -111,7 +109,6 @@ class EmojiManager extends Connection implements Queryable
 
 
         //if result is not empty return it, else throw an exception
-
         if (! empty($result)) {
             return $result;
         }
@@ -137,7 +134,6 @@ class EmojiManager extends Connection implements Queryable
         $statement = $connection->prepare($sql);
 
         //bind params
-
         $statement->bindParam(1, $id);
 
         //execute the statement
@@ -170,16 +166,16 @@ class EmojiManager extends Connection implements Queryable
         //prepare a statement;
         $statement = $connection->prepare($sql);
 
-		 /*
-		 * I have to get the object properties here because, apparently
-		 * PDOStatement::bindParam() does not allow passing of objects by reference.
-		 * Can't believe this is happening.
-		 */
+	    /*
+	    * I have to get the object properties here because, apparently
+	    * PDOStatement::bindParam() does not allow passing of objects by reference.
+	    * Can't believe this is happening.
+	    */
 
-		 $name 		= $emoji->getName();
-		 $char 		= $emoji->getChar();
-		 $category 	= $emoji->getCategory();
-		 $updatedAt = $emoji->getUpdatedAt();
+	    $name 		= $emoji->getName();
+	    $char 		= $emoji->getChar();
+	    $category 	= $emoji->getCategory();
+	    $updatedAt  = $emoji->getUpdatedAt();
 
         //bind params
         $statement->bindParam(1, $name);
@@ -231,7 +227,6 @@ class EmojiManager extends Connection implements Queryable
 	    $createdBy  = $emoji->getCreatedBy();
 
         //bind params
-
         $statement->bindParam(1, $name);
         $statement->bindParam(2, $char);
         $statement->bindParam(3, $keywords);

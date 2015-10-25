@@ -5,18 +5,20 @@ namespace spec\Verem\Emoji\Api\DAO;
 use Mockery;
 use Prophecy\Prophet;
 use Prophecy\Argument;
+use Verem\Emoji\Api\Emoji;
 use PhpSpec\ObjectBehavior;
 use Verem\Emoji\Api\DAO\EmojiManager;
-use Verem\Emoji\Api\Emoji;
 
 class EmojiManagerSpec extends ObjectBehavior
 {
 	private $prophet;
+
 	public function let()
 	{
 
 		$this->prophet = new Prophet();
 	}
+
     function it_is_initializable()
     {
         $this->shouldHaveType('Verem\Emoji\Api\DAO\EmojiManager');

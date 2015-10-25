@@ -53,6 +53,7 @@ class Connection extends EnvReader
      {
         //initialize database configurations
         $this->initConfigs();
+
         //try to get a pdo connection, fail if an error occurs
         $connection = null;
         try {
