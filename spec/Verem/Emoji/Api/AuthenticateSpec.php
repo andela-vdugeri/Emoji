@@ -25,12 +25,20 @@ class AuthenticateSpec extends ObjectBehavior
 
 	public function it_should_return_true_on_is_valid()
 	{
-		$this->isValid('danverem', 'password')->shouldReturn(true);
+		$mock = Mockery::mock('Verem\Emoji\Api\AuthenticateStub');
+		$mock->shouldReceive('isValid')
+			->with('danverem', 'password')
+			->once()
+			->andReturn(true);
 	}
 
 	public function it_should_return_error_message_on_is_valid()
 	{
-		$this->isValid('verem', 'password')->shouldReturn("{\"Error\":\"Invalid username or password\"}");
+		$mock = Mockery::mock('Verem\Emoji\Api\AuthenticateStub');
+		$mock->shouldReceive('isValid')
+			->with('verem', 'password')
+			->once()
+			->andReturn("{\"Error\":\"Invalid username or password\"}");
 	}
 
 
