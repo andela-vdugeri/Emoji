@@ -25,9 +25,6 @@ env:
 
 before_script:
   - composer install
-  - mysql -e 'create database myapp_test;'
-  - mysql -e 'CREATE TABLE `myapp_test.users` (`id` int(10) unsigned NOT NULL AUTO_INCREMENT,`username` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,`password` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,`usernames` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,`token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,`token_expire` datetime DEFAULT NULL,PRIMARY KEY (`id`),UNIQUE KEY `username_UNIQUE` (`username`)) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;'
-  - mysql -e 'insert into myapp_test.users (username, password, names) values("danverem", "password", "Verem Dugeri");'
 
 script:
    - bin/phpspec run --format=pretty
