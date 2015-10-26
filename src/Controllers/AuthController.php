@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: andela
+ * @author : Verem
  * Date: 10/19/15
  * Time: 6:29 PM
  */
@@ -38,12 +38,17 @@ class AuthController
 
             //update the user table
             $manager = new UserManager();
+
             $result  = $manager->updateToken(
               $data['expiry'], $data['token'], $username);
-			$response->body($result);
+
+			$result['password'] = $data['password'];
+			$result['username'] = $data['username'];
+
+			$response->body(json_encode($result));
         }
 
-        if (json_decode($result, true)['status'] == 200) {
+        if ($result['status'] == 200) {
             $response->header('Authorization', $data['token']);
         }
 
@@ -79,8 +84,12 @@ class AuthController
 	 }
 
 
-	public function registerUser(Slim $app)
-	{
+	 /**
+	 * @param Slim $app
+	 * @return mixed
+	 */
+	 public function registerUser(Slim $app)
+	 {
 		$response = $this->getResponse($app);
 
 		$username = $app->request->params('username');
@@ -109,7 +118,7 @@ class AuthController
 		$response->body($token);
 
 		return $response;
-	}
+	 }
 
 	 /**
 	 * @param $app

@@ -43,7 +43,8 @@ class Authenticate
      {
         if ($this->isValid($this->username, $this->password) === true) {
             $token = $this->getToken();
-            return $token;
+			return $token;
+
         } else {
             return json_encode(['Error: '=>'User authentication failed']);
         }
@@ -90,7 +91,9 @@ class Authenticate
         $tokenExpire = date('Y-m-d H:i:s', strtotime('+ 1 hour'));
         return json_encode([
           'expiry'=>$tokenExpire,
-          'token' => $token
+          'token' => $token,
+		  'username' => $this->username,
+		  'password' => $this->password
         ]);
      }
 }
