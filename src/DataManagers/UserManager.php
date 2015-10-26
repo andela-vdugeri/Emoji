@@ -161,12 +161,23 @@ class UserManager extends Connection implements Queryable
         //prepare a statement
         $statement = $connection->prepare($sql);
 
-        //bind params to statement
-        $statement->bindParam(1, $user->getUsername());
-        $statement->bindParam(2, $user->getPassword());
-        $statement->bindParam(3, $user->getNames());
-        $statement->bindParam(4, $user->getToken());
-        $statement->bindParam(5, $user->getTokenExpire());
+		/*
+		* I have to get the object properties here because, apparently
+		* PDOStatement::bindParam() does not allow passing of objects by reference, sad
+		* stuff.
+		*/
+	    $username    = $user->getUsername();
+	    $password    = $user->getPassword();
+	    $names 	  	 = $user->getNames();
+	    $token 	     = $user->getToken();
+	    $tokenExpire = $user->getTokenExpire();
+
+		//bind params to statement
+        $statement->bindParam(1, $username);
+        $statement->bindParam(2, $password);
+        $statement->bindParam(3, $names);
+        $statement->bindParam(4, $token);
+        $statement->bindParam(5, $tokenExpire);
 
         //execute query
         $statement->execute();
