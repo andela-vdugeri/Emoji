@@ -20,7 +20,7 @@ class AuthController
      public static function login(Slim $app)
      {
 
-		$response 	= self::getResponse($app);
+		$response 	= static::getResponse($app);
 
         $username   = $app->request->params('username');
         $password   = $app->request->params('password');
@@ -56,7 +56,7 @@ class AuthController
 	 */
 	 public static function logout(Slim $app)
 	 {
-		$response = self::getResponse($app);
+		$response = static::getResponse($app);
 
 		//remove token from session
 		$token 	 = $app->request->headers->get('Authorization');
@@ -123,7 +123,7 @@ class AuthController
 		return $response;
 	 }
 
-	private function jsonDecode($response)
+	private static function jsonDecode($response)
 	{
 		return json_decode($response, true);
 	}

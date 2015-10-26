@@ -76,7 +76,7 @@ class EmojiController
 	 */
      public static function save(Slim $app)
      {
-		$response  	= self::getContentType($app);
+		$response  	= static::getContentType($app);
 
         $name        = $app->request->params('emojiname');
         $char        = $app->request->params('emojichar');
@@ -128,7 +128,7 @@ class EmojiController
 	 */
 	 public static function update(Slim $app, $id)
 	 {
-		$response 	= self::getContentType($app);
+		$response 	= static::getContentType($app);
 
 		$name 		= $app->request->params('emojiname');
 		$char	 	= $app->request->params('emojichar');
@@ -177,7 +177,7 @@ class EmojiController
 	 */
 	 public static function patch(Slim $app, $id)
 	 {
-		$response 	= self::getContentType($app);
+		$response 	= static::getContentType($app);
 
 		$name 		= $app->request->params('emojiname');
 		$char 		= $app->request->params('emojichar');
@@ -226,7 +226,7 @@ class EmojiController
 	 */
 	 public static function delete(Slim $app, $id)
 	 {
-		$response 	=  self::getContentType($app);
+		$response 	=  static::getContentType($app);
 
 		$manager 	= new EmojiManager();
 
@@ -263,7 +263,7 @@ class EmojiController
 	 * @param $app
 	 * @return mixed
 	 */
-	 private function getContentType(Slim $app)
+	 private static function getContentType(Slim $app)
 	 {
 		$response   = $app->response();
 		$response->header("Content-type", "application/json");
