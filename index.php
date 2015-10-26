@@ -16,17 +16,17 @@ use Verem\Emoji\Api\Exceptions\RecordNotFoundException;
 
 $app = new Slim([
 	'templates.path' => 'templates/',
-	'debug'			 => false
+	'debug'			 => true
 ]);
 
 // Prepare view
 $app->view(new \Slim\Views\Twig());
 $app->view->parserOptions = array(
-  'charset' => 'utf-8',
-  'cache' => realpath('templates/cache'),
+  'charset' 	=> 'utf-8',
+  'cache' 		=> realpath('templates/cache'),
   'auto_reload' => true,
   'strict_variables' => false,
-  'autoescape' => true
+  'autoescape' 	=> true,
 );
 $app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
 
