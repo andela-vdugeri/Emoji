@@ -46,7 +46,7 @@ class Authenticate
 			return $token;
 
         } else {
-            return json_encode(['Error: '=>'User authentication failed']);
+            return json_encode(['status'=> '404','Error: '=>'User authentication failed']);
         }
      }
 
@@ -68,13 +68,13 @@ class Authenticate
                 if ($user['password'] === $password) {
                     $message  = true;
                 } else {
-                    $message = json_encode(['message'=>'Invalid username or password']);
+                    $message = json_encode(['status'=>'404','message'=>'Invalid username or password']);
                 }
             } else {
-                $message = json_encode(['message' => 'User account does not exist']);
+                $message = json_encode(['status'=> '404','message' => 'User account does not exist']);
             }
         } catch (RecordNotFoundException $e) {
-            $message = json_encode(['Error' => "Invalid username or password"]);
+            $message = json_encode(['status'=> '404','Error' => "Invalid username or password"]);
         }
 
         return $message;
