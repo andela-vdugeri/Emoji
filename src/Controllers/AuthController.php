@@ -124,7 +124,7 @@ class AuthController
 	 * @param $app
 	 * @return mixed
 	 */
-	 private function getResponse(Slim $app)
+	 private static function getResponse(Slim $app)
 	 {
 		$response = $app->response();
 		$response->header("Content-type", "application/json");
